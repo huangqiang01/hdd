@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+		<meta name="apple-touch-fullscreen" content="yes" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="format-detection" content="telephone=no">
+		<meta http-equiv="Cache-Control" content="no-store" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<title>HDD</title>
+		<link rel="shortcut icon" type="image/x-icon" href="./common/img/favicon.ico">
+		<link rel="stylesheet" href="./common/css/reset.css" />
+		<link rel="stylesheet" href="css/index.css" />
+	</head>
+	<body>
+		<ul class="index-btn">
+			<li><span class="photo-album">相册</span></li>
+			<li><span class="article">文章</span></li>
+			<li><span class="other">其他</span></li>
+		</ul>
+	</body>
+	<script>
+		document.querySelector('.photo-album').addEventListener('click', function(e) {
+			e.stopPropagation();
+			window.location.href = './photo.html';
+		});
+	</script>
+	
+</html>

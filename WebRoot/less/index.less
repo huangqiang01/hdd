@@ -1,0 +1,39 @@
+.index-btn {
+    padding: .5rem 0;
+    li {
+        text-align: center;
+        margin: .48rem 0;
+        span {
+            display: inline-block;
+            width: 2.6rem;
+            line-height: .86rem;
+            border-radius: .08rem;
+            font-size: .28rem;
+            color: #fff;
+            &.photo-album {
+                background: lighten(#f00, 19%);
+                background: linear-gradient(155deg, lighten(#f00, 26%) 5%, lighten(#f00, 12%) 100%);
+                box-shadow: 4px 2px 2px #ccc;
+                &:active {
+                    box-shadow: 2px 1px 2px #ccc;
+                }
+            }
+            &.article {
+                background: lighten(#FF6100, 19%);
+                background: linear-gradient(155deg, lighten(#FF6100, 26%) 5%, lighten(#FF6100, 12%) 100%);
+                box-shadow: 4px 2px 2px #ccc;
+                &:active {
+                    box-shadow: 2px 1px 2px #ccc;
+                }
+            }
+            &.other {
+                background: lighten(#00e100, 19%);
+                background: linear-gradient(155deg, lighten(#00e100, 26%) 5%, lighten(#00e100, 12%) 100%);
+                box-shadow: 4px 2px 2px #ccc;
+                &:active {
+                    box-shadow: 2px 1px 2px #ccc;
+                }
+            }
+        }
+    }
+}
