@@ -98,36 +98,24 @@ function addImgStr(img, id, width, height) {
 }
 
 function uploadFiles(imageBase64) {
-//	var blob = dataURLtoBlob(dataurl);
-	var blob = dataURLtoBlob(imageBase64); // 上一步中的函数
-//	var canvas = document.createElement('canvas');
-//	var dataURL = canvas.toDataURL('image/jpeg', 0.5);
-//	var fd = new FormData(document.forms[0]);
-//	fd.append("the_file", blob, 'image.png');
-	
-	
-//	var formData = new FormData(); // 当前为空
-//	formData.append('images', '11111');
-//	formData.enctype = 'multipart/form-data';
-//	var myRequest = new XMLHttpRequest();
-//	
-//	myRequest.open('post', 'http://192.168.1.104:8080/Q_jiang/20004', false);
-//	myRequest.send(formData);
-	
+	var blob = dataURLtoBlob(imageBase64);
 	//使用ajax发送
-	var fd = new FormData();
-	fd.append("image", blob, "image.png");
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', 'http://192.168.1.104:8080/20001', false);
-	xhr.send(fd);
-	
-	
-	
-	
-	
-	
-	
-	
+	var formData = new FormData();
+	formData.append('image', blob, 'image.jpg');
+	formData.append('name', '1111111');
+	formData.enctype = 'multipart/form-data';
+	//使用ajax发送
+	var myRequest = new XMLHttpRequest();
+	myRequest.open('POST', 'http://192.168.9.24:8081/hdd/20001');
+	// 进度条
+	myRequest.upload.onprogress = updateProgress;
+	myRequest.upload.onload = transferComplete;
+	myRequest.upload.onerror = transferFailed;
+	myRequest.upload.onabort = transferCanceled;
+	myRequest.upload.onloadstart = function(){//上传开始执行方法
+        console.log('---');
+    };
+    myRequest.send(formData);
 }
 
 function dataURLtoBlob(dataurl) {
@@ -137,6 +125,31 @@ function dataURLtoBlob(dataurl) {
         u8arr[n] = bstr.charCodeAt(n);
     }
     return new Blob([u8arr], {type:mime});
+}
+
+//上传进度实现方法，上传过程中会频繁调用该方法
+function updateProgress(evt) {
+     // event.total是需要传输的总字节，event.loaded是已经传输的字节。如果event.lengthComputable不为真，则event.total等于0
+     if (evt.lengthComputable) {//
+//         progressBar.max = evt.total;
+//         progressBar.value = evt.loaded;
+         console.log(Math.round(evt.loaded / evt.total * 100) + "%");
+     }
+}
+
+//上传成功响应
+function transferComplete(evt) {
+ //服务断接收完文件返回的结果
+ //    alert(evt.target.responseText);
+     alert("上传成功！");
+}
+//上传失败
+function transferFailed(evt) {
+    alert("上传失败！");
+}
+  //取消上传
+function transferCanceled(){
+    xhr.abort();
 }
 
 
