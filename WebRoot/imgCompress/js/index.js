@@ -1,18 +1,22 @@
 
+var imgArr = [],
+	// 上传图片的长度
+	uploadLength = 0,
+	// 处理成功的图片
+	doimgLength = 0,
+	// 已上传的图片
+	uploadend = 0;
 // 选择图片
 $('.file-input').on('change', function(e) {
 	e.stopPropagation();
-	
-	
-	
 	var files = e.target.files,
 		filesLength = files.length,
-		isNotImg = 0;
+		isNotImg = 0,
+		arrId = [];
 		console.log(files);
+		uploadLength = filesLength;
 	for (var i = 0; i < filesLength; i++) {
 		var item = files[i];
-		
-		console.log(item.lastModifiedDate);
 		if (item.type.split('/')[0] !== 'image') {
 			alert('请上传正确的图片文件');
 			continue;
@@ -21,17 +25,22 @@ $('.file-input').on('change', function(e) {
       	reader.readAsDataURL(item);
       	reader.onloadstart = function () {
       		//用以在上传前加入一些事件或效果，如载入中...的动画效果
-      		
+      		var id = getFileid();
+      		$('.img-list-box').append(createHtml(id));
+      		arrId.push(id);
       	};
       	reader.onloadend = function (e) {
-	        var imaged = new Image();
+	        var imaged = new Image(),
+	        	imgObj = {};
 	        imaged.src = this.result;
+	        imaged.id = arrId.shift();
 	        // 利用canvas对图片进行压缩
 	        imaged.onload = function () {
 	        	var _this = this;
 	          	// 设置图片高度
 				var arr = setImgWH(_this.width, _this.height);
 				if (!arr) {
+					showImgInfo(null, _this.id);
 					return false;
 				}
 				var w = arr[0];
@@ -42,12 +51,41 @@ $('.file-input').on('change', function(e) {
 		        canvas.height = h;
 		        ctx.drawImage(_this, 0, 0, w, h);
 		        var _src = canvas.toDataURL('image/jpeg');
-		        $('.img-list-box').append(addImgStr(_src, i, w, h));
+		        // 显示页面参数
+		        showImgInfo(_src, _this.id, w, h);
+		        // 
+		        imgObj = {
+		        	// 
+		        	img: _src,
+		        	imgid: _this.id,
+		        	imgw_h: w + '_' + h,
+		        	isFirst: '',
+		        	title: '',
+		        	content: '',
+		        	numno: ''
+		        }
+		        imgArr.push(imgObj);
+//		        $('.img-list-box').append(addImgStr(_src, i, w, h));
 		        // 上传
-				uploadFiles(_src);
+//				uploadFiles(_src);
 	        };
       	};
 	}
+});
+
+// 提交
+$('.subimt-img').on('click', function(e) {
+	doimgLength = imgArr.length;
+	if (uploadLength === 0) {
+		return false;
+	}
+	if (uploadLength > doimgLength) {
+		if (!confirm('上传照片为' + uploadLength + '张，处理成功' + doimgLength + '张，是否继续上传？')) {
+			console.log('取消');
+		}
+	}
+	// 上传
+	uploadFiles(imgArr[uploadend]);
 });
 
 /**
@@ -73,14 +111,10 @@ function setImgWH(imgwidth, imgheight) {
 	return [imgwidth, imgheight];
 }
 
-// 设置图片
-function addImgStr(img, id, width, height) {
-	var arr = [],
-		_w = width >= height ? '260' : (width * 260 / height).toFixed(0),
-		_h = width >= height ? (height * 260 / width).toFixed(0) : '260',
-		bg = 'background: url(' + img + ') center center / ' + _w + 'px ' + _h + 'px no-repeat;';
-	arr.push('<div class="img-info">');
-	arr.push('<div class="img" style="' + bg + '">');
+function createHtml(id) {
+	var arr = [];
+	arr.push('<div class="img-info" id=' + id + '>');
+	arr.push('<div class="img">');
 	arr.push('<span></span>');
 	arr.push('</div>');
 	arr.push('<div class="img-describe">');
@@ -97,16 +131,41 @@ function addImgStr(img, id, width, height) {
 	return arr.join('');
 }
 
-function uploadFiles(imageBase64) {
-	var blob = dataURLtoBlob(imageBase64);
+// 设置图片
+function showImgInfo(img, id, width, height) {
+	var $imgInfo = $('#' + id).find('.img');
+	if (!img) {
+		$imgInfo.text('图片长边像素必须大于600，且短边像素必须大于400');
+		return false;
+	}
+	var arr = [],
+		_w = width >= height ? '260' : (width * 260 / height).toFixed(0),
+		_h = width >= height ? (height * 260 / width).toFixed(0) : '260';
+	$imgInfo.css('background', 'url(' + img + ') center center / ' + _w + 'px ' + _h + 'px no-repeat');
+}
+
+function getFileid() {
+	var id = new Date().getTime();
+	return id + '_' + (Math.random() * 1000).toFixed(0);
+}
+
+function uploadFiles(obj) {
+	if (obj == null) {
+		return false;
+	}
+	var blob = dataURLtoBlob(obj.img);
 	//使用ajax发送
 	var formData = new FormData();
-	formData.append('image', blob, 'image.jpg');
-	formData.append('name', '1111111');
+	formData.append('image', blob, obj.imgid + '.jpg');
+	formData.append('imgw_h', obj.imgw_h);
+	formData.append('isFirst', obj.isFirst);
+	formData.append('title', obj.title);
+	formData.append('content', obj.content);
+	formData.append('numno', obj.numno);
 	formData.enctype = 'multipart/form-data';
 	//使用ajax发送
 	var myRequest = new XMLHttpRequest();
-	myRequest.open('POST', 'http://192.168.9.24:8081/hdd/20001');
+	myRequest.open('POST', 'http://192.168.1.104:8080/20001');
 	// 进度条
 	myRequest.upload.onprogress = updateProgress;
 	myRequest.upload.onload = transferComplete;
@@ -114,6 +173,21 @@ function uploadFiles(imageBase64) {
 	myRequest.upload.onabort = transferCanceled;
 	myRequest.upload.onloadstart = function(){//上传开始执行方法
         console.log('---');
+    };
+    
+    myRequest.onreadystatechange = function() {
+
+    	if(myRequest.readyState == 4 && myRequest.status == 200){    
+            var b = JSON.parse(myRequest.responseText);    
+            if(b.error_no === "0"){
+            	uploadend++;
+            	uploadFiles(imgArr[uploadend]);
+            }else{    
+                alert(b.error_info);    
+            }           
+        }
+        
+     // 上传
     };
     myRequest.send(formData);
 }
@@ -141,16 +215,20 @@ function updateProgress(evt) {
 function transferComplete(evt) {
  //服务断接收完文件返回的结果
  //    alert(evt.target.responseText);
-     alert("上传成功！");
+//     alert("上传成功！");
 }
 //上传失败
 function transferFailed(evt) {
-    alert("上传失败！");
+//    alert("上传失败！");
 }
   //取消上传
 function transferCanceled(){
     xhr.abort();
 }
+
+
+
+
 
 
 

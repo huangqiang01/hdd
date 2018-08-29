@@ -2,6 +2,7 @@ package com.hdd.servlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -20,6 +22,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.hdd.utils.ExifTester;
 import com.hdd.utils.QOutput;
+import com.hdd.utils.SaveImg;
 
 @WebServlet(description = "文件上传", urlPatterns = { "/upload" })
 
@@ -35,6 +38,8 @@ import com.hdd.utils.QOutput;
 public class Servlet20001 extends QOutput {
 	
 	ExifTester exiftester = new ExifTester();
+	
+	SaveImg saveImg = new SaveImg();
     
     private static final long serialVersionUID = 1L;
     
@@ -44,6 +49,7 @@ public class Servlet20001 extends QOutput {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String savePath = request.getServletContext().getRealPath("/upload/cache");
+        String savePathMin = request.getServletContext().getRealPath("/upload/min");
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setHeaderEncoding("UTF-8");  
@@ -55,19 +61,42 @@ public class Servlet20001 extends QOutput {
                 if (fileItem.isFormField()) {
                     params.put(fileItem.getFieldName(), fileItem.getString("utf-8"));
                 } else {
-                	String fileName = getFilename();
+                	String fileName = fileItem.getName();
                 	String imgUri = savePath + File.separator + fileName;
                 	File file = new File(imgUri);
                 	fileItem.write(file);
                 	params.put(fileItem.getFieldName(), imgUri);
+                	params.put("name", fileName);
                 }
             }
-            //使用params.get获取参数值
-            String send_time = (String) params.get("image");
-            String name = (String) params.get("name");
-            System.out.println(send_time);
-            System.out.println(name);
-            
+            String islast = (String) params.get("islast");
+            HttpSession session = request.getSession(true);
+            ArrayList list = (ArrayList) session.getAttribute("imglist");
+            if (list == null) {
+            	list = new ArrayList();
+            }
+            if (islast == null) {
+            	//使用params.get获取参数值
+                String image = (String) params.get("image");
+                String imgw_h = (String) params.get("imgw_h");
+                String isFirst = (String) params.get("isFirst");
+                String title = (String) params.get("title");
+                String content = (String) params.get("content");
+                String numno = (String) params.get("numno");
+                // 保存小图片
+                ArrayList list1 = saveImg.saveImg(params, savePathMin);
+                params.put("minimg", list1);
+                list.add(params);
+                System.out.println(list.size());
+                session.setAttribute("imglist", list);
+                this.outPut("0", "上传图片成功", response);
+            } else {
+            	//使用params.get获取参数值
+                String arrtitle = (String) params.get("arrtitle");
+                String arrcontent = (String) params.get("arrcontent");
+                String arrtips = (String) params.get("arrtips");
+                String arralbum = (String) params.get("arralbum");
+            }
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

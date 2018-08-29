@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -52,6 +54,32 @@ public class SaveImg {
     	allList.add(doPageImg(src, minwidht, minheight, minUri, filename));
     	// 复制初始图片
     	doPageImg(src, (int)src.getWidth(), (int)src.getHeight(), origUri, filename);
+        return allList;
+	}
+	
+	/**
+	 * 保存小图片
+	 * @param username
+	 * @param password
+	 * @return 
+	 * @throws IOException 
+	 */
+	public ArrayList saveImg(HashMap params, String savePathMin) throws IOException{
+		ArrayList allList = new ArrayList();
+		String image = (String) params.get("image");
+		String name = (String) params.get("name");
+        String imgw_h = (String) params.get("imgw_h");
+        String isFirst = (String) params.get("isFirst");
+        String title = (String) params.get("title");
+        String content = (String) params.get("content");
+        String numno = (String) params.get("numno");
+        // 获得文件输入流
+		BufferedImage src = ImageIO.read(new File(image));
+		String[] w_h = imgw_h.split("_");
+		int imgWidth = (int) (Integer.parseInt(w_h[0]) * 0.35);
+		int imgHeight = (int) (Integer.parseInt(w_h[1]) * 0.35);
+        // 处理缩略图
+    	allList.add(doPageImg(src, imgWidth, imgHeight, savePathMin, name));
         return allList;
 	}
 	
