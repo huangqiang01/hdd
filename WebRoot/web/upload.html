@@ -12,29 +12,88 @@
 		<meta http-equiv="Cache-Control" content="no-store" />
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Expires" content="0" />
-		<title>HDD</title>
+		<title></title>
 		<link rel="shortcut icon" type="image/x-icon" href="../common/img/favicon.ico">
-		<link rel="stylesheet" type="text/css" href="../common/css/reset.css"/>
-		<link rel="stylesheet" type="text/css" href="css/style.css" >
-		<script src="../common/js/jquery-1.11.1.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../common/js/jquery.form.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../common/js/jquery.uploadfile.min.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript" src="../common/js/Qinit.js" ></script>
+		<link rel="stylesheet" href="../common/css/reset.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<script type="text/javascript" src="../common/js/jquery-1.11.1.min.js" ></script>
 	</head>
 
 	<body>
-		<div id="fileuploader">Upload</div>
-		<div class="img-arr-info">
-			<input type="text" placeholder="请输入图集标题" />
-			<div class="select-type">
-				<select id="select-imgtype">
-					<option selected disabled>请选择图合集类型</option>
-				</select>
+		<div class="add-img-box">
+			<div class="img-list-box">
+				<!--<div class="img-info">
+					<div class="img" style="background: url(common/images/timg.jpg) center center / 20px 260px no-repeat;">
+						<span></span>
+					</div>
+					<div class="img-describe">
+						<label for="first-img-id">
+							<span>是否设置为首图</span>
+							<input type="checkbox" id="first-img-id" />
+						</label>
+						<span class="img-title">图片标题</span>
+						<input type="" name="" id="" value="" />
+						<span class="img-title">图片描述</span>
+						<textarea name="" rows="" cols=""></textarea>
+					</div>
+				</div>-->
 			</div>
-			<span>提交</span>
+			<div class="add-img">
+				<input type="file" class="file-input" multiple accept="image/jpeg,image/jpg" />
+			</div>
 		</div>
-		<div class="cover cover-box"></div>
-		<div class="cover cover-content">上传中...</div>
+		<div class="submit-img-box">
+			<div class="input-box">
+				<span>标题</span>
+				<input type="text" class="arr-title" />
+			</div>
+			<div class="input-box">
+				<span>作品描述</span>
+				<textarea class="arr-describe"></textarea>
+			</div>
+			<div class="input-box">
+				<span>标签</span>
+				<div class="img-sign">
+					<em data-val="1">风光</em>
+					<em data-val="2">人像</em>
+					<em>色彩</em>
+					<em>色彩</em>
+					<em>风光</em>
+					<em>人像</em>
+					<em>色彩</em>
+					<em>人像</em>
+				</div>
+			</div>
+			<div class="input-box">
+				<span>同时添加到相册</span>
+				<div class="img-album">
+					<div class="select-album">
+						<input type="text" data-val="1" readonly maxlength="8" value="未分类相册" />
+						<ul>
+							<li data-val="1">未分类相册</li>
+							<li>我是新建的1</li>
+							<li>我是新建的2</li>
+							<li>我是新建的3</li>
+						</ul>
+					</div>
+					<span>新建相册</span>
+				</div>
+			</div>
+			<span class="subimt-img">提交</span>
+		</div>
+		<div class="cover-box cover-img" style="display: none;"></div>
+		<div class="cover-box cover-btn" style="display: none;">
+			<div class="loader-box">
+					<div class="runner"></div>
+			</div>
+			<div class="upload-num">
+				<span>100%</span>
+				<span>1/2</span>
+			</div>
+			<div class="cancel-btn">
+				<span>取消</span>
+			</div>
+		</div>
 	</body>
 	<script src="js/upload.js" type="text/javascript" charset="utf-8"></script>
 </html>
