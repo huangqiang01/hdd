@@ -42,4 +42,12 @@ public interface GetData extends Serializable {
 	 * @throws SQLException
 	 */
 	public OutResults getImgPhoto(String id, String typeid, String minid) throws Exception;
+	
+	/**
+	 * ªÒ»°œ‡≤·
+	 * @return
+	 * @throws SQLException
+	 */
+	public OutResults getAlbum(String id) throws Exception;
+	
 }

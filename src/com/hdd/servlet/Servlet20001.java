@@ -96,6 +96,16 @@ public class Servlet20001 extends QOutput {
                 String arrcontent = (String) params.get("arrcontent");
                 String arrtips = (String) params.get("arrtips");
                 String arralbum = (String) params.get("arralbum");
+                System.out.println(list.size());
+                System.out.println(list);
+                
+                
+                
+                
+                
+                
+                
+                this.outPut("0", "上传成功", response);
             }
 		} catch (Exception e) {
 			// TODO: handle exception

@@ -9,6 +9,7 @@ import java.util.List;
 import com.hdd.bean.ImgArr;
 import com.hdd.bean.ImgArrType;
 import com.hdd.bean.ImgPhoto;
+import com.hdd.bean.Photoalbum;
 import com.hdd.db.DBHelper;
 import com.hdd.utils.OutResults;
 import com.hdd.utils.VerSqlParam;
@@ -135,4 +136,34 @@ public class GetDataDao {
 		or.setResults(list);
 		return or;
 	}
+	
+	/**
+	 * 获取相册
+	 * @return
+	 * @throws SQLException
+	 */
+	public OutResults getImgAlbum(String id) throws Exception{
+		String sql = "select m.id,m.albumname,m.introduce from photoalbum as m where isshow=1 ";
+		if (id != null && !id.equals("") && id.matches("\\d+")) {
+			sql += "and id=" + id + " ";
+		}
+		sql += "order by id;";
+		List list = new ArrayList();
+		OutResults or = new OutResults();
+		//模拟获取数据库数据
+		Photoalbum photoalbum;
+		dbh = new DBHelper(sql);
+		rs = dbh.pst.executeQuery();
+		while(rs.next()){
+			photoalbum = new Photoalbum();
+			photoalbum.setId(rs.getString("id"));
+			photoalbum.setAlbumname(rs.getString("albumname"));
+			photoalbum.setIntroduce(rs.getString("introduce"));
+			list.add(photoalbum);
+		}
+		or.setResults(list);
+		return or;
+	}
+	
+	
 }

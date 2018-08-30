@@ -36,8 +36,16 @@
     <servlet-name>Servlet20006</servlet-name>
     <servlet-class>com.hdd.servlet.Servlet20006</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>Servlet20007</servlet-name>
+    <servlet-class>com.hdd.servlet.Servlet20007</servlet-class>
+  </servlet>
   
   
+  <servlet-mapping>
+    <servlet-name>Servlet20007</servlet-name>
+    <url-pattern>/20007</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Servlet20006</servlet-name>
     <url-pattern>/20006</url-pattern>

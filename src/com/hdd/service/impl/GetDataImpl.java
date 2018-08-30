@@ -46,4 +46,12 @@ public class GetDataImpl implements GetData {
 		
 		return getDataDao.getImgHpoto(id, typeid, minid);
 	}
+
+	@Override
+	public OutResults getAlbum(String id) throws Exception {
+		// 验证是否数字
+        verSql.checkNum(new String[]{ id });
+		
+		return getDataDao.getImgAlbum(id);
+	}
 }

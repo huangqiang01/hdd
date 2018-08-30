@@ -9,144 +9,190 @@ var imgArr = [],
 	// 选取的图集标签
 	selectSign = [],
 	// 选取的图集相册
-	selectAlbum = '0',
+	selectAlbum = '',
 	// 是否新建相册
 	isCreatAlbum = false,
 	// 新建相册定时器
 	setCreat = null;
-// 选择图片
-$('.file-input').on('change', function(e) {
-	e.stopPropagation();
-	var files = e.target.files,
-		filesLength = files.length,
-		isNotImg = 0,
-		arrId = [];
-		console.log(files);
-		uploadLength = filesLength;
-	for (var i = 0; i < filesLength; i++) {
-		var item = files[i];
-		if (item.type.split('/')[0] !== 'image') {
-			alert('请上传正确的图片文件');
-			continue;
+
+$(document).ready(function() {
+	// 获取图合集类型
+	queryPhototype();
+	// 获取相册
+	queryAlbum();
+
+	// 选择图片
+	$('.file-input').on('change', function(e) {
+		e.stopPropagation();
+		var files = e.target.files,
+			filesLength = files.length,
+			isNotImg = 0,
+			arrId = [];
+			console.log(files);
+			uploadLength = filesLength;
+		for (var i = 0; i < filesLength; i++) {
+			var item = files[i];
+			if (item.type.split('/')[0] !== 'image') {
+				alert('请上传正确的图片文件');
+				continue;
+			}
+			var reader = new FileReader();
+	      	reader.readAsDataURL(item);
+	      	reader.onloadstart = function () {
+	      		//用以在上传前加入一些事件或效果，如载入中...的动画效果
+	      		var id = getFileid();
+	      		$('.img-list-box').append(createHtml(id));
+	      		arrId.push(id);
+	      	};
+	      	reader.onloadend = function (e) {
+		        var imaged = new Image(),
+		        	imgObj = {};
+		        imaged.src = this.result;
+		        imaged.id = arrId.shift();
+		        // 利用canvas对图片进行压缩
+		        imaged.onload = function () {
+		        	var _this = this;
+		          	// 设置图片高度
+					var arr = setImgWH(_this.width, _this.height);
+					if (!arr) {
+						showImgInfo(null, _this.id);
+						return false;
+					}
+					var w = arr[0];
+		          	var h = arr[1];
+					var canvas = document.createElement('canvas');
+		          	var ctx = canvas.getContext('2d');
+			        canvas.width = w;
+			        canvas.height = h;
+			        ctx.drawImage(_this, 0, 0, w, h);
+			        var _src = canvas.toDataURL('image/jpeg');
+			        // 显示页面参数
+			        showImgInfo(_src, _this.id, w, h);
+			        // 
+			        imgObj = {
+			        	// 
+			        	img: _src,
+			        	imgid: _this.id,
+			        	imgw_h: w + '_' + h,
+			        	isFirst: '',
+			        	title: '',
+			        	content: '',
+			        	numno: ''
+			        }
+			        imgArr.push(imgObj);
+	//		        $('.img-list-box').append(addImgStr(_src, i, w, h));
+			        // 上传
+	//				uploadFiles(_src);
+		        };
+	      	};
 		}
-		var reader = new FileReader();
-      	reader.readAsDataURL(item);
-      	reader.onloadstart = function () {
-      		//用以在上传前加入一些事件或效果，如载入中...的动画效果
-      		var id = getFileid();
-      		$('.img-list-box').append(createHtml(id));
-      		arrId.push(id);
-      	};
-      	reader.onloadend = function (e) {
-	        var imaged = new Image(),
-	        	imgObj = {};
-	        imaged.src = this.result;
-	        imaged.id = arrId.shift();
-	        // 利用canvas对图片进行压缩
-	        imaged.onload = function () {
-	        	var _this = this;
-	          	// 设置图片高度
-				var arr = setImgWH(_this.width, _this.height);
-				if (!arr) {
-					showImgInfo(null, _this.id);
-					return false;
+	});
+	
+	// 提交
+	$('.subimt-img').on('click', function(e) {
+		doimgLength = imgArr.length;
+		if (uploadLength === 0) {
+			return false;
+		}
+		// 检测集合信息
+		if (!checkArrInfo()) {
+			return false;
+		}
+		if (uploadLength > doimgLength) {
+			if (!confirm('上传照片为' + uploadLength + '张，处理成功' + doimgLength + '张，是否继续上传？')) {
+				console.log('取消');
+			}
+		}
+		// 上传
+		uploadFiles(imgArr[uploadend]);
+	});
+	
+	
+	// 选取图集相册---点击相册
+	$('.select-album').on('click', function(e) {
+		e.stopPropagation();
+		if (isCreatAlbum) {
+			return false;
+		}
+		var $this = $(this);
+		if ($this.hasClass('active')) {
+			$this.removeClass('active');
+		} else {
+			$this.addClass('active');
+		}
+	});
+	// 选取图集相册---隐藏相册
+	$('body').on('click', function(e) {
+		e.stopPropagation();
+		$('.select-album').removeClass('active');
+	});
+	
+	// 新建图集相册
+	$('.img-album span').on('click', function(e) {
+		isCreatAlbum = true;
+		alert('暂时不支持此功能');
+	//	$('.select-album input').val('').addClass('active').prop('readonly', false).focus();
+	});
+});
+
+// 获取标签
+function queryPhototype() {
+	var param = {
+		funNo: "20003"
+	};
+	Qajax(param, function(data){
+		if (data.error_no === "0"){
+			var result = data.results,
+				str = '';
+			result.map(function(item) {
+				str += '<em data-val=' + item.id + '>' + item.typename + '</em>';
+			});
+			$('.img-sign').html(str);
+			// 选取图集标签
+			$('.img-sign>em').on('click', function(e) {
+				var $this = $(this),
+					val = $this.attr('data-val');
+				if ($this.hasClass('active')) {
+					$this.removeClass('active');
+					// 移除指定值
+					removeArrVal(selectSign, val);
+				} else {
+					$this.addClass('active');
+					// 添加值
+					selectSign.push(val);
 				}
-				var w = arr[0];
-	          	var h = arr[1];
-				var canvas = document.createElement('canvas');
-	          	var ctx = canvas.getContext('2d');
-		        canvas.width = w;
-		        canvas.height = h;
-		        ctx.drawImage(_this, 0, 0, w, h);
-		        var _src = canvas.toDataURL('image/jpeg');
-		        // 显示页面参数
-		        showImgInfo(_src, _this.id, w, h);
-		        // 
-		        imgObj = {
-		        	// 
-		        	img: _src,
-		        	imgid: _this.id,
-		        	imgw_h: w + '_' + h,
-		        	isFirst: '',
-		        	title: '',
-		        	content: '',
-		        	numno: ''
-		        }
-		        imgArr.push(imgObj);
-//		        $('.img-list-box').append(addImgStr(_src, i, w, h));
-		        // 上传
-//				uploadFiles(_src);
-	        };
-      	};
-	}
-});
-
-// 提交
-$('.subimt-img').on('click', function(e) {
-	doimgLength = imgArr.length;
-	if (uploadLength === 0) {
-		return false;
-	}
-	// 检测集合信息
-	if (!checkArrInfo()) {
-		return false;
-	}
-	if (uploadLength > doimgLength) {
-		if (!confirm('上传照片为' + uploadLength + '张，处理成功' + doimgLength + '张，是否继续上传？')) {
-			console.log('取消');
+			});
+		} else {
+			alert(data.error_info);
 		}
-	}
-	// 上传
-	uploadFiles(imgArr[uploadend]);
-});
+	});
+}
 
-// 选取图集标签
-$('.img-sign>em').on('click', function(e) {
-	var $this = $(this),
-		val = $this.attr('data-val');
-	if ($this.hasClass('active')) {
-		$this.removeClass('active');
-		// 移除指定值
-		removeArrVal(selectSign, val);
-	} else {
-		$this.addClass('active');
-		// 添加值
-		selectSign.push(val);
-	}
-});
-
-// 选取图集相册---点击相册
-$('.select-album').on('click', function(e) {
-	e.stopPropagation();
-	if (isCreatAlbum) {
-		return false;
-	}
-	var $this = $(this);
-	if ($this.hasClass('active')) {
-		$this.removeClass('active');
-	} else {
-		$this.addClass('active');
-	}
-});
-// 选取图集相册---选择相册
-$('.select-album li').on('click', function(e) {
-	var $this = $(this);
-	$('.select-album input').val($this.text());
-	// 相册id（全局）
-	selectAlbum = $this.attr('data-val');
-});
-// 选取图集相册---隐藏相册
-$('body').on('click', function(e) {
-	e.stopPropagation();
-	$('.select-album').removeClass('active');
-});
-
-// 新建图集相册
-$('.img-album span').on('click', function(e) {
-	isCreatAlbum = true;
-	alert('暂时不支持此功能');
-//	$('.select-album input').val('').addClass('active').prop('readonly', false).focus();
-});
+// 获取相册
+function queryAlbum() {
+	var param = {
+		funNo: "20007"
+	};
+	Qajax(param, function(data){
+		if (data.error_no === "0"){
+			var result = data.results,
+				str = '<li data-val="">未分类相册</li>';
+			result.map(function(item) {
+				str += '<li data-val=' + item.id + '>' + item.albumname + '</li>';
+			});
+			$('.select-album>ul').html(str);
+			// 选取图集相册---选择相册
+			$('.select-album li').on('click', function(e) {
+				var $this = $(this);
+				$('.select-album input').val($this.text());
+				// 相册id（全局）
+				selectAlbum = $this.attr('data-val');
+			});
+		} else {
+			alert(data.error_info);
+		}
+	});
+}
 
 /**
  * 设置图片大小
@@ -224,38 +270,46 @@ function checkArrInfo() {
 }
 
 function uploadFiles(obj) {
-	if (obj == null) {
-		return false;
-	}
-	var blob = dataURLtoBlob(obj.img);
-	//使用ajax发送
+	
+	// 需要发送的数据
 	var formData = new FormData();
-	formData.append('image', blob, obj.imgid + '.jpg');
-	formData.append('imgw_h', obj.imgw_h);
-	formData.append('isFirst', obj.isFirst);
-	formData.append('title', obj.title);
-	formData.append('content', obj.content);
-	formData.append('numno', obj.numno);
-	formData.enctype = 'multipart/form-data';
 	//使用ajax发送
 	var myRequest = new XMLHttpRequest();
+	if (!obj) {
+		formData.append('islast', 'true');
+		formData.append('arrtitle', $('.arr-title').val());
+		formData.append('arrcontent', $('.arr-describe').val().trim());
+		formData.append('arrtips', selectSign.join('_'));
+		formData.append('arralbum', selectAlbum);
+	} else {
+		var blob = dataURLtoBlob(obj.img);
+		formData.append('image', blob, obj.imgid + '.jpg');
+		formData.append('imgw_h', obj.imgw_h);
+		formData.append('isFirst', obj.isFirst);
+		formData.append('title', obj.title);
+		formData.append('content', obj.content);
+		formData.append('numno', obj.numno);
+		// 进度条
+		myRequest.upload.onprogress = updateProgress;
+		myRequest.upload.onload = transferComplete;
+		myRequest.upload.onerror = transferFailed;
+		myRequest.upload.onabort = transferCanceled;
+		myRequest.upload.onloadstart = function(){//上传开始执行方法
+	        console.log('---');
+	    };
+	}
+	formData.enctype = 'multipart/form-data';
 	myRequest.open('POST', 'http://192.168.1.104:8080/20001');
-	// 进度条
-	myRequest.upload.onprogress = updateProgress;
-	myRequest.upload.onload = transferComplete;
-	myRequest.upload.onerror = transferFailed;
-	myRequest.upload.onabort = transferCanceled;
-	myRequest.upload.onloadstart = function(){//上传开始执行方法
-        console.log('---');
-    };
-    
-    myRequest.onreadystatechange = function() {
-
+	myRequest.onreadystatechange = function() {
     	if(myRequest.readyState == 4 && myRequest.status == 200){    
             var b = JSON.parse(myRequest.responseText);    
             if(b.error_no === "0"){
-            	uploadend++;
-            	uploadFiles(imgArr[uploadend]);
+            	if (!obj) {
+            		alert('完成');
+            	} else {
+            		uploadend++;
+            		uploadFiles(imgArr[uploadend]);
+            	}
             }else{    
                 alert(b.error_info);    
             }           
