@@ -69,7 +69,7 @@ public class SaveImg {
 		String image = (String) params.get("image");
 		String name = (String) params.get("name");
         String imgw_h = (String) params.get("imgw_h");
-        String isFirst = (String) params.get("isFirst");
+        String isfirst = (String) params.get("isfirst");
         String title = (String) params.get("title");
         String content = (String) params.get("content");
         String numno = (String) params.get("numno");
