@@ -103,12 +103,10 @@ public class Servlet20001 extends QOutput {
                 
                 
                 
-                
-                
                 this.outPut("0", "上传成功", response);
             }
 		} catch (Exception e) {
-			// TODO: handle exception
+			this.outPut("-1", "上传图片失败", response);
 		}
 //        Collection<Part> parts = request.getParts();
 //        ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();

@@ -13,7 +13,9 @@ var imgArr = [],
 	// 是否新建相册
 	isCreatAlbum = false,
 	// 新建相册定时器
-	setCreat = null;
+	setCreat = null,
+	// 缩略图信息
+	firstminimg = {};
 
 $(document).ready(function() {
 	// 获取图合集类型
@@ -38,16 +40,22 @@ $(document).ready(function() {
 			}
 			var reader = new FileReader();
 	      	reader.readAsDataURL(item);
+	      	reader.id = i;
 	      	reader.onloadstart = function () {
 	      		//用以在上传前加入一些事件或效果，如载入中...的动画效果
 	      		var id = getFileid();
-	      		$('.img-list-box').append(createHtml(id));
+	      		$('.img-list-box').append(createHtml(id, this.id));
 	      		arrId.push(id);
+	      		if (arrId.length === filesLength) {
+	      			// 绑定图片操作事件
+	      			bindImgClick();
+	      		}
 	      	};
 	      	reader.onloadend = function (e) {
 		        var imaged = new Image(),
-		        	imgObj = {};
-		        imaged.src = this.result;
+		        	imgObj = {},
+		        	rethis = this;
+		        imaged.src = rethis.result;
 		        imaged.id = arrId.shift();
 		        // 利用canvas对图片进行压缩
 		        imaged.onload = function () {
@@ -74,15 +82,16 @@ $(document).ready(function() {
 			        	img: _src,
 			        	imgid: _this.id,
 			        	imgw_h: w + '_' + h,
-			        	isFirst: '',
 			        	title: '',
 			        	content: '',
 			        	numno: ''
+			        };
+			        if (rethis.id === 0) {
+			        	firstminimg['minname'] = _this.id;
+			        	firstminimg['minwidth'] = w;
+			        	firstminimg['minheight'] = h;
 			        }
 			        imgArr.push(imgObj);
-	//		        $('.img-list-box').append(addImgStr(_src, i, w, h));
-			        // 上传
-	//				uploadFiles(_src);
 		        };
 	      	};
 		}
@@ -106,7 +115,6 @@ $(document).ready(function() {
 		// 上传
 		uploadFiles(imgArr[uploadend]);
 	});
-	
 	
 	// 选取图集相册---点击相册
 	$('.select-album').on('click', function(e) {
@@ -217,16 +225,17 @@ function setImgWH(imgwidth, imgheight) {
 	return [imgwidth, imgheight];
 }
 
-function createHtml(id) {
+function createHtml(id, i) {
+	console.log(i);
 	var arr = [];
 	arr.push('<div class="img-info" id=' + id + '>');
 	arr.push('<div class="img">');
-	arr.push('<span></span>');
+	arr.push('<span data-id=' + id +'></span>');
 	arr.push('</div>');
 	arr.push('<div class="img-describe">');
 	arr.push('<label for="first-img-' + id + '">');
 	arr.push('<span>是否设置为首图</span>');
-	arr.push('<input type="checkbox" id="first-img-' + id + '" />');
+	arr.push('<input type="radio" ' + (i === 0 ? 'checked' : '') + ' name="selectFirst" id="first-img-' + id + '" />');
 	arr.push('</label>');
 	arr.push('<span class="img-title">图片标题</span>');
 	arr.push('<input type="text" />');
@@ -248,11 +257,36 @@ function showImgInfo(img, id, width, height) {
 		_w = width >= height ? '260' : (width * 260 / height).toFixed(0),
 		_h = width >= height ? (height * 260 / width).toFixed(0) : '260';
 	$imgInfo.css('background', 'url(' + img + ') center center / ' + _w + 'px ' + _h + 'px no-repeat');
+	$('#first-img-' + id).attr('data-info', id + '_' + width + '_' + height);
 }
 
 function getFileid() {
 	var id = new Date().getTime();
 	return id + '_' + (Math.random() * 1000).toFixed(0);
+}
+
+function bindImgClick() {
+	// 选择首个缩略图
+	$('.img-describe input[type=radio]').off('click').on('click', function() {
+		var info = $(this).attr('data-info');
+		if (!info) {
+			return false;
+		}
+		var infoArr = info.split('_');
+		firstminimg['minname'] = infoArr[0];
+    	firstminimg['minwidth'] = infoArr[1];
+    	firstminimg['minheight'] = infoArr[2];
+	});
+	
+	// 删除图片
+	$('.img>span').off('click').on('click', function() {
+		var id = $(this).attr('data-id');
+		if (!id) {
+			return false;
+		}
+		$('#' + id).remove();
+	});
+	
 }
 
 function checkArrInfo() {
@@ -281,11 +315,11 @@ function uploadFiles(obj) {
 		formData.append('arrcontent', $('.arr-describe').val().trim());
 		formData.append('arrtips', selectSign.join('_'));
 		formData.append('arralbum', selectAlbum);
+		formData.append('firsturl', selectAlbum);
 	} else {
 		var blob = dataURLtoBlob(obj.img);
 		formData.append('image', blob, obj.imgid + '.jpg');
 		formData.append('imgw_h', obj.imgw_h);
-		formData.append('isFirst', obj.isFirst);
 		formData.append('title', obj.title);
 		formData.append('content', obj.content);
 		formData.append('numno', obj.numno);
@@ -299,7 +333,7 @@ function uploadFiles(obj) {
 	    };
 	}
 	formData.enctype = 'multipart/form-data';
-	myRequest.open('POST', 'http://192.168.1.104:8080/20001');
+	myRequest.open('POST', 'http://192.168.9.24:8081/hdd/20001');
 	myRequest.onreadystatechange = function() {
     	if(myRequest.readyState == 4 && myRequest.status == 200){    
             var b = JSON.parse(myRequest.responseText);    

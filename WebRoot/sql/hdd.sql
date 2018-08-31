@@ -41,6 +41,9 @@ CREATE TABLE `photoalbum` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
+insert into photoalbum values(0,'天安门','','1','');
+insert into photoalbum values(0,'北京','','1','');
+
 CREATE TABLE `phototype` (
   `id` int(2) NOT NULL auto_increment,
   `typename` varchar(40) default NULL COMMENT '分类名称',
@@ -50,7 +53,8 @@ CREATE TABLE `phototype` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='照片分类';
 
-
+insert into phototype values(0,'人像','','1','');
+insert into phototype values(0,'旅游','','1','');
 
 
 
