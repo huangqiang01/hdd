@@ -15,8 +15,6 @@ public class ImgArrType implements Serializable {
 	private String id;
 	private String typename;
 	private String introduce;
-	private String isshow;
-	private String reserve;
 	
 	public String getId() {
 		return id;
@@ -35,17 +33,5 @@ public class ImgArrType implements Serializable {
 	}
 	public void setIntroduce(String introduce) {
 		this.introduce = introduce;
-	}
-	public String getIsshow() {
-		return isshow;
-	}
-	public void setIsshow(String isshow) {
-		this.isshow = isshow;
-	}
-	public String getReserve() {
-		return reserve;
-	}
-	public void setReserve(String reserve) {
-		this.reserve = reserve;
 	}
 }

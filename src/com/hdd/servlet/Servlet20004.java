@@ -27,9 +27,12 @@ public class Servlet20004 extends QOutput {
 		
 		String typeid = request.getParameter("typeid");
 		String minid = request.getParameter("minid");
+		String albumid = request.getParameter("albumid");
+		
+		
 		
 		try {
-			this.outPut(getDataImpl.getImgArr(typeid, minid), response);
+			this.outPut(getDataImpl.getImgArr(typeid, minid, albumid), response);
 		} catch (Exception e) {
 			this.outPut("-222", "系统内部错误！！！", response);
 			e.printStackTrace();

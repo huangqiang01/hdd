@@ -15,6 +15,12 @@ $(document).ready(function() {
 			$('.guankan').html(result.checknum);
 			// 点赞人数
 			$('.dianzan').html(result.likenum);
+			var arraycontent = result.arraycontent;
+			if (arraycontent) {
+				// 描述
+				$('.miaoshu11').html(arraycontent);
+			}
+			
 			// 获取图片
 			getImg(minid);
 			if (isCheck(minid)) {

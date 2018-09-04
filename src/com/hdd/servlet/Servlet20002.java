@@ -105,7 +105,7 @@ public class Servlet20002 extends QOutput {
         	ArrayList _minArr = (ArrayList) firstImg.get(1);
         	String _uri = "/upload/min/" + (String) firstImg.get(2);
         	// 保存图片集合信息
-			String minid = addData.submitImgArr(imgtype, _uri, (String)_minArr.get(0), (String)_minArr.get(1), arrtitle, String.valueOf(arrLength));
+//			String minid = addData.submitImgArr(imgtype, _uri, (String)_minArr.get(0), (String)_minArr.get(1), arrtitle, String.valueOf(arrLength));
 			
 			for (int j = 0; j < arrLength; j++) {
 				ArrayList imgArr = (ArrayList) allList.get(j);
@@ -120,7 +120,7 @@ public class Servlet20002 extends QOutput {
 					imgcontent = (String) imgArr.get(4);
 				}
 				// 保存详情到数据库
-	        	addData.submitImgDetails(imgtype, minid, _uri1, (String)_minArr1.get(0), (String)_minArr1.get(1), imgtitle, imgcontent);
+//	        	addData.submitImgDetails(imgtype, minid, _uri1, (String)_minArr1.get(0), (String)_minArr1.get(1), imgtitle, imgcontent);
 			}
 			session.removeAttribute("uploadmark");
 			this.outPut("0", "图片上传成功", response);

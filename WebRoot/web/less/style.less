@@ -116,6 +116,16 @@ div {
             height: 260px;
             background: #ccc;
             z-index: 1;
+            &>em {
+                position: absolute;
+                top: 0;
+                left: 0;
+                box-sizing: border-box;
+                font-style: normal;
+                width: 100%;
+                font-size: 15px;
+                padding: 10px;
+            }
             &>span {
                 position: relative;
                 display: block;
@@ -149,6 +159,9 @@ div {
                     display: block;
                     margin-top: 10px;
                 }
+            }
+            input[type=radio] {
+                margin: 0 0 0 5px;
             }
             &>input,
             &>textarea {
@@ -403,6 +416,7 @@ div {
 }
 .loader-box {
     position: relative;
+    overflow: hidden;
     height: 6px;
     width: 100%;
     background-color: transparent;
@@ -413,10 +427,10 @@ div {
         position: absolute;
         right: 0;
         height: 100%;
-        width: 10%;
         border-radius: 0 3px 3px 0;
         background-color: transparent;
         background-image: linear-gradient(top, #fff, #676767);
+        transition: width;
     }
 }
 .upload-num {
@@ -453,4 +467,72 @@ div {
         }
     }
 }
+
+.input-img-cut {
+    position: relative;
+    float: left;
+    width: 70%;
+}
+
+.img-cut-box {
+    position: relative;
+    &:after {
+        content: "";
+        position: absolute;
+        display: table;
+        clear: both;
+    }
+    .add-btn {
+        position: relative;
+        width: 100%;
+        height: 40px;
+        margin-bottom: 10px;
+        &>span {
+            position: absolute;
+            display: block;
+            top: 0;
+            left: 0;
+            width: 160px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 3px;
+            background: #ffca33;
+            color: #fff;
+            &:hover {
+                background: #ffbf0a;
+            }
+        }
+        .file-input-share {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 160px;
+            height: 40px;
+            z-index: 100;
+            outline: none;
+            border: none;
+            opacity: 0;
+        }
+    }
+}
+.img-container {
+    float: left;
+    width: 100%;
+    max-width: 250px;
+    img {
+        width: 100%;
+    }
+}
+
+.img-preview {
+    float: right;
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    img {
+        width: 100%;
+    }
+}
+
 

@@ -65,7 +65,6 @@ public class SaveImg {
 	 * @throws IOException 
 	 */
 	public ArrayList saveImg(HashMap params, String savePathMin) throws IOException{
-		ArrayList allList = new ArrayList();
 		String image = (String) params.get("image");
 		String name = (String) params.get("name");
         String imgw_h = (String) params.get("imgw_h");
@@ -76,11 +75,10 @@ public class SaveImg {
         // 获得文件输入流
 		BufferedImage src = ImageIO.read(new File(image));
 		String[] w_h = imgw_h.split("_");
-		int imgWidth = (int) (Integer.parseInt(w_h[0]) * 0.35);
-		int imgHeight = (int) (Integer.parseInt(w_h[1]) * 0.35);
+		int imgWidth = (int) (Integer.parseInt(w_h[0]) * 0.4);
+		int imgHeight = (int) (Integer.parseInt(w_h[1]) * 0.4);
         // 处理缩略图
-    	allList.add(doPageImg(src, imgWidth, imgHeight, savePathMin, name));
-        return allList;
+        return doPageImg(src, imgWidth, imgHeight, savePathMin, name);
 	}
 	
 	// 处理压缩图片

@@ -17,10 +17,6 @@
     <servlet-class>com.hdd.servlet.Servlet20001</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>Servlet20002</servlet-name>
-    <servlet-class>com.hdd.servlet.Servlet20002</servlet-class>
-  </servlet>
-  <servlet>
     <servlet-name>Servlet20003</servlet-name>
     <servlet-class>com.hdd.servlet.Servlet20003</servlet-class>
   </servlet>
@@ -61,10 +57,6 @@
   <servlet-mapping>
     <servlet-name>Servlet20003</servlet-name>
     <url-pattern>/20003</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Servlet20002</servlet-name>
-    <url-pattern>/20002</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Servlet20001</servlet-name>

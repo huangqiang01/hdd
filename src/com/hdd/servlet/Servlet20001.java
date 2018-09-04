@@ -20,6 +20,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import com.hdd.service.impl.AddDataImpl;
 import com.hdd.utils.ExifTester;
 import com.hdd.utils.QOutput;
 import com.hdd.utils.SaveImg;
@@ -40,6 +41,7 @@ public class Servlet20001 extends QOutput {
 	ExifTester exiftester = new ExifTester();
 	
 	SaveImg saveImg = new SaveImg();
+	AddDataImpl addData = new AddDataImpl();
     
     private static final long serialVersionUID = 1L;
     
@@ -50,10 +52,12 @@ public class Servlet20001 extends QOutput {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String savePath = request.getServletContext().getRealPath("/upload/cache");
         String savePathMin = request.getServletContext().getRealPath("/upload/min");
+        String sharePath = request.getServletContext().getRealPath("/upload/share");
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setHeaderEncoding("UTF-8");  
         HashMap params = new HashMap();
+        HttpSession session = request.getSession(true);
         try {
             List items = upload.parseRequest(request);
             for (Object object : items) {
@@ -62,53 +66,90 @@ public class Servlet20001 extends QOutput {
                     params.put(fileItem.getFieldName(), fileItem.getString("utf-8"));
                 } else {
                 	String fileName = fileItem.getName();
-                	String imgUri = savePath + File.separator + fileName;
+                	String imgUri = "";
+                	if (fileName.indexOf("share_") > -1) {
+                		imgUri = sharePath + File.separator + fileName;
+                	} else {
+                		imgUri = savePath + File.separator + fileName;
+                	}
                 	File file = new File(imgUri);
                 	fileItem.write(file);
                 	params.put(fileItem.getFieldName(), imgUri);
                 	params.put("name", fileName);
+                	System.out.println(fileName);
                 }
             }
-            String islast = (String) params.get("islast");
-            HttpSession session = request.getSession(true);
+            String firstupload = (String) params.get("firstupload");
+            if (firstupload != null && firstupload.equals("1")) {
+            	// 单位s
+                session.setMaxInactiveInterval(1 * 60 * 30);
+            	session.removeAttribute("imglist");
+            }
+            String firsturl = (String) params.get("firsturl");
             ArrayList list = (ArrayList) session.getAttribute("imglist");
             if (list == null) {
             	list = new ArrayList();
             }
-            if (islast == null) {
-            	//使用params.get获取参数值
-                String image = (String) params.get("image");
-                String imgw_h = (String) params.get("imgw_h");
-                String isFirst = (String) params.get("isFirst");
-                String title = (String) params.get("title");
-                String content = (String) params.get("content");
-                String numno = (String) params.get("numno");
+            if (firsturl == null) {
                 // 保存小图片
                 ArrayList list1 = saveImg.saveImg(params, savePathMin);
                 params.put("minimg", list1);
                 list.add(params);
-                System.out.println(list.size());
                 session.setAttribute("imglist", list);
                 this.outPut("0", "上传图片成功", response);
             } else {
+            	int listSize = list.size();
+            	if (listSize > 100) {
+            		this.outPut("-100", "上传图片数量过大", response);
+            		return;
+            	}
             	//使用params.get获取参数值
                 String arrtitle = (String) params.get("arrtitle");
                 String arrcontent = (String) params.get("arrcontent");
                 String arrtips = (String) params.get("arrtips");
                 String arralbum = (String) params.get("arralbum");
-                System.out.println(list.size());
-                System.out.println(list);
-                
-                
-                
-                
-                
-                
-                
-                this.outPut("0", "上传成功", response);
+                String firstwidth = (String) params.get("firstwidth");
+                String firstheight = (String) params.get("firstheight");
+                double _firstwidth = Integer.parseInt(firstwidth) * 0.4;
+                double _firstheight = Integer.parseInt(firstheight) * 0.4;
+                String _name1 = (String) params.get("name");
+                // 保存图片集合信息
+                String _firsturl = "/upload/min/" + firsturl;
+                // 分享图片地址
+                String _shareurl = "/upload/share/" + _name1;
+                String minid = addData.submitImgArr(arrtips, arralbum, _firsturl, String.valueOf((int)_firstwidth), String.valueOf((int)_firstheight), arrtitle, arrcontent, String.valueOf(listSize));
+//                if (minid.equals("")) {
+//                	session.removeAttribute("imglist");
+//                	this.outPut("-2", "上传图片失败", response);
+//                }
+                int mark = 0;
+                for (int i = 0; i < listSize; i++) {
+                	HashMap map = (HashMap) list.get(i);
+                	//使用params.get获取参数值
+                	String name = (String) map.get("name");
+                	String imgw_h = (String) map.get("imgw_h");
+                	String[] w_hArr = imgw_h.split("_");
+                	String title = (String) map.get("title");
+                	String content = (String) map.get("content");
+                	String numno = (String) map.get("numno");
+                	// 保存图片
+                	String _name = "/upload/cache/" + name;
+                	boolean isupload = addData.submitImgDetails(arrtips, minid, arralbum, _name, w_hArr[0], w_hArr[1], title, content, numno);
+                	if (isupload) {
+                		mark++;
+                	}
+                }
+                session.removeAttribute("imglist");
+                if (mark == listSize) {
+                	this.outPut("0", "上传成功", response);
+                } else {
+                	this.outPut("-1", "上传异常，请重试", response);
+                }
             }
 		} catch (Exception e) {
-			// TODO: handle exception
+			session.removeAttribute("imglist");
+			this.outPut("-1", "系统异常", response);
+			e.printStackTrace();
 		}
 //        Collection<Part> parts = request.getParts();
 //        ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
@@ -138,10 +179,10 @@ public class Servlet20001 extends QOutput {
     }
     
     // 生成文件名称
-    public String getFilename() {
-    	long _time = new Date().getTime();
-        Random random = new Random();
-        int rd = random.nextInt(999);
-    	return _time + "_" + rd + ".jpg";
-    }
+//    public String getFilename() {
+//    	long _time = new Date().getTime();
+//        Random random = new Random();
+//        int rd = random.nextInt(999);
+//    	return _time + "_" + rd + ".jpg";
+//    }
 }

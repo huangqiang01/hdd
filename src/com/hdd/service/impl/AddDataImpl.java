@@ -19,8 +19,7 @@ public class AddDataImpl implements AddData {
 	VerSqlParam verSql = new VerSqlParam();
 	
 	@Override
-	public String submitImgArr(String typeid, String imguri, String imgwidth, String imgheight, 
-			String arrayname, String arraynum) throws Exception {
+	public String submitImgArr(String typeid, String albumid, String imguri, String imgwidth, String imgheight, String arrayname, String arraycontent, String arraynum) throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         // 创建时间
@@ -31,19 +30,27 @@ public class AddDataImpl implements AddData {
         String isshow = String.valueOf('1');
         // 备注
         String reserve = "黄蛋蛋最帅!";
+        System.out.println(imgwidth);
+        System.out.println(imgheight);
+        
         // 验证是否数字
-        verSql.checkNum(new String[]{ typeid, imgwidth, imgheight, arraynum });
+        verSql.checkNum(new String[]{ albumid, imgwidth, imgheight, arraynum });
         
         imguri = verSql.encodeString(imguri);
+        // 1-2-3
+        typeid = verSql.encodeString(typeid);
         
-        verSql.checkLength(arrayname, 200);
+        verSql.checkLength(arrayname, 100);
         arrayname = verSql.codeHtml(arrayname);
         
-		return addDataDao.addMinArr(typeid, imguri, imgwidth, imgheight, arrayname, arraynum, createtime, updatetime, isshow, reserve);
+        verSql.checkLength(arraycontent, 300);
+        arraycontent = verSql.codeHtml(arraycontent);
+        
+		return addDataDao.addMinArr(typeid, albumid, imguri, imgwidth, imgheight, arrayname, arraycontent, arraynum, createtime, updatetime, isshow, reserve);
 	}
 	
 	@Override
-	public boolean submitImgDetails(String typeid, String minid, String uri, String imgwidth, String imgheight, String imgtitle, String imgcontent) throws Exception {
+	public boolean submitImgDetails(String typeid, String minid, String albumid, String uri, String imgwidth, String imgheight, String imgtitle, String imgcontent, String numno) throws Exception {
 		
 		// 是否显示，1-默认显示
         String isshow = String.valueOf('1');
@@ -51,8 +58,9 @@ public class AddDataImpl implements AddData {
         String reserve = "黄蛋蛋最帅!";
         
         // 验证是否数字
-        verSql.checkNum(new String[]{ typeid, minid, imgwidth, imgheight });
+        verSql.checkNum(new String[]{ albumid, minid, imgwidth, imgheight, numno });
         
+        typeid = verSql.encodeString(typeid);
         uri = verSql.encodeString(uri);
         
         verSql.checkLength(imgtitle, 30);
@@ -61,7 +69,7 @@ public class AddDataImpl implements AddData {
         verSql.checkLength(imgcontent, 300);
         imgcontent = verSql.codeHtml(imgcontent);
 		
-		return addDataDao.addImages(typeid, minid, uri, imgwidth, imgheight, imgtitle, imgcontent, isshow, reserve);
+		return addDataDao.addImages(typeid, minid, albumid, uri, imgwidth, imgheight, imgtitle, imgcontent, numno, isshow, reserve);
 	}
 
 	@Override

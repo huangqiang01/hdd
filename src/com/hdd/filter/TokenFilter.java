@@ -31,7 +31,7 @@ public class TokenFilter implements Filter {
 //		// 匹配功能号
 //		String _url = matcherStr(req.getRequestURI());
 //
-//		if (_url.equals("20001") || _url.equals("20002")) {
+//		if (_url.equals("20001")) {
 //			String token = "";
 //			// 如果Cookie不为空
 //			if (req.getCookies() !=null) {

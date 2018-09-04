@@ -34,14 +34,14 @@ public interface GetData extends Serializable {
 	 * @return
 	 * @throws SQLException
 	 */
-	public OutResults getImgArr(String typeid, String minid) throws Exception;
+	public OutResults getImgArr(String typeid, String minid, String albumid) throws Exception;
 	
 	/**
 	 * 获取图片集合
 	 * @return
 	 * @throws SQLException
 	 */
-	public OutResults getImgPhoto(String id, String typeid, String minid) throws Exception;
+	public OutResults getImgPhoto(String id, String typeid, String minid, String albumid) throws Exception;
 	
 	/**
 	 * 获取相册
