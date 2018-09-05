@@ -25,6 +25,8 @@ public class ImgArr implements Serializable {
 	private String updatetime;
 	private String checknum;
 	private String likenum;
+	private String shareurl;
+	
 	public String getId() {
 		return id;
 	}
@@ -103,4 +105,12 @@ public class ImgArr implements Serializable {
 	public void setLikenum(String likenum) {
 		this.likenum = likenum;
 	}
+	public String getShareurl() {
+		return shareurl;
+	}
+	public void setShareurl(String shareurl) {
+		this.shareurl = shareurl;
+	}
+	
+	
 }

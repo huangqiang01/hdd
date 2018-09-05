@@ -20,8 +20,12 @@ $(document).ready(function() {
 				// 描述
 				$('.miaoshu11').html(arraycontent);
 			}
-			// 处理分享
-			shareCon(result.arrayname, arraycontent);
+			// 分享图标地址
+			var shareUrl = result.shareurl;
+			if (shareUrl) {
+				// 处理分享
+				shareCon(result.arrayname, arraycontent, shareUrl);
+			}
 			// 获取图片
 			getImg(minid);
 			if (isCheck(minid)) {
@@ -49,6 +53,8 @@ function getImg(minid) {
 			// 显示数据
 			var str = getDataStr(result);
 			$('.show-img').html(str);
+			
+			$('.bottom').show();
 		} else {
 			alert(data.error_info);
 		}
@@ -140,20 +146,22 @@ function isClickLike(id) {
 }
 
 // 分享内容
-function shareCon(title, content) {
+function shareCon(title, content, imgurl) {
 	$.ajax({
 		url: "/app/signatureServlet?param=signature",
 		type: "post",
 		dataType: "json",
 		success: function(data){
+			title = stringHtml(title);
+			title = stringHtml(content);
 			// 页面功能授权
-			wxToFunction(data, title, content);
+			wxToFunction(data, title, content, imgurl);
 		}
 	});
 }
 
 //页面功能授权
-function wxToFunction(data, title, content){
+function wxToFunction(data, title, content, imgurl){
 	wx.config({
 	    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
 	    appId: data.appId, // 必填，公众号的唯一标识
@@ -168,7 +176,7 @@ function wxToFunction(data, title, content){
 		wx.onMenuShareTimeline({
 		    title: title, // 分享标题
 		    link: window.location.href, // 分享链接
-		    imgUrl: _uri + '/app/img/mark.jpg', // 分享图标
+		    imgUrl: _uri + imgurl, // 分享图标
 		    success: function () { 
 		        // 用户确认分享后执行的回调函数
 //		    	alert("成功");
@@ -182,7 +190,7 @@ function wxToFunction(data, title, content){
 		    title: title, // 分享标题
 		    desc: content, // 分享描述
 		    link: window.location.href, // 分享链接
-		    imgUrl: _uri + '/app/img/mark.jpg', // 分享图标
+		    imgUrl: _uri + imgurl, // 分享图标
 		    type: '', // 分享类型,music、video或link，不填默认为link
 		    dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
 		    success: function () { 
@@ -199,7 +207,7 @@ function wxToFunction(data, title, content){
 		    title: title, // 分享标题
 		    desc: content, // 分享描述
 		    link: window.location.href, // 分享链接
-		    imgUrl: _uri + '/app/img/mark.jpg', // 分享图标
+		    imgUrl: _uri + imgurl, // 分享图标
 		    success: function () { 
 		       // 用户确认分享后执行的回调函数
 		    },
@@ -212,6 +220,13 @@ function wxToFunction(data, title, content){
 	wx.error(function(res){
 		// alert(res);
 	});
+}
+
+function stringHtml(str) {
+	return str.replace(/&lt;/g, "<")
+			.replace(/&gt;/g, ">")
+			.replace(/&nbsp;/g, " ")
+			.replace(/&quot;/g, "\"");
 }
 
 

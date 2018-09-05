@@ -117,7 +117,7 @@ public class Servlet20001 extends QOutput {
                 String _firsturl = "/upload/min/" + firsturl;
                 // ∑÷œÌÕº∆¨µÿ÷∑
                 String _shareurl = "/upload/share/" + _name1;
-                String minid = addData.submitImgArr(arrtips, arralbum, _firsturl, String.valueOf((int)_firstwidth), String.valueOf((int)_firstheight), arrtitle, arrcontent, String.valueOf(listSize));
+                String minid = addData.submitImgArr(arrtips, arralbum, _firsturl, String.valueOf((int)_firstwidth), String.valueOf((int)_firstheight), arrtitle, arrcontent, String.valueOf(listSize), _shareurl);
 //                if (minid.equals("")) {
 //                	session.removeAttribute("imglist");
 //                	this.outPut("-2", "…œ¥´Õº∆¨ ß∞‹", response);

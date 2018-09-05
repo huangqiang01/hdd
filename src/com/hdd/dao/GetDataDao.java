@@ -62,7 +62,7 @@ public class GetDataDao {
 	 * @throws SQLException
 	 */
 	public OutResults getImgArr(String typeid, String minid, String albumid) throws Exception{
-		String sql = "select m.id,m.typeid,m.albumid,m.imguri,m.imgwidth,m.imgheight,m.arrayname,m.arraycontent,m.arraynum,m.createtime,m.updatetime,m.checknum,m.likenum from minphoto as m where isshow=1 ";
+		String sql = "select m.id,m.typeid,m.albumid,m.imguri,m.imgwidth,m.imgheight,m.arrayname,m.arraycontent,m.arraynum,m.createtime,m.updatetime,m.checknum,m.likenum,m.shareurl from minphoto as m where isshow=1 ";
 		if (typeid != null && !typeid.equals("") && typeid.matches("\\d+")) {
 			sql += "and typeid=" + typeid + " ";
 		}
@@ -94,6 +94,11 @@ public class GetDataDao {
 			imgArr.setUpdatetime(rs.getString("updatetime"));
 			imgArr.setChecknum(rs.getString("checknum"));
 			imgArr.setLikenum(rs.getString("likenum"));
+			String shareurl = rs.getString("shareurl");
+			if (shareurl != null && !shareurl.equals("")) {
+				shareurl = verSql.decodeString(shareurl);
+			}
+			imgArr.setShareurl(shareurl);
 			list.add(imgArr);
 		}
 		or.setResults(list);

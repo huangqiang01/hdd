@@ -27,7 +27,7 @@ public interface AddData extends Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	public String submitImgArr(String typeid, String albumid, String imguri, String imgwidth, String imgheight, String arrayname, String arraycontent, String arraynum) throws Exception;
+	public String submitImgArr(String typeid, String albumid, String imguri, String imgwidth, String imgheight, String arrayname, String arraycontent, String arraynum, String shareurl) throws Exception;
 	
 	/**
 	 * Ã·ΩªÕº∆¨œÍ«È

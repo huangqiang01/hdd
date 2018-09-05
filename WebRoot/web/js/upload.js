@@ -385,7 +385,7 @@ function uploadFiles(obj) {
 	}
 	formData.enctype = 'multipart/form-data';
 	// 生产修改
-	myRequest.open('POST', '/20001');
+	myRequest.open('POST', '/hdd/20001');
 	myRequest.onreadystatechange = function() {
     	if (myRequest.readyState == 4 && myRequest.status == 200){
             var b = JSON.parse(myRequest.responseText);
@@ -492,7 +492,6 @@ function cutImg() {
 			shareObj.y = data.y;
 			shareObj.w = data.width;
 			shareObj.h = data.height;
-			console.log(shareObj);
 		}
 	});
 }
@@ -500,9 +499,9 @@ function cutImg() {
 function getCutInfo() {
 	var canvas = document.createElement('canvas');
   	var ctx = canvas.getContext('2d');
-    canvas.width = shareObj.w;
-    canvas.height = shareObj.h;
-    ctx.drawImage(shareObj.img, 0, 0, shareObj.w, shareObj.h, shareObj.x, shareObj.y, 500, 500);
+    canvas.width = 400;
+    canvas.height = 400;
+    ctx.drawImage(shareObj.img, shareObj.x, shareObj.y, shareObj.w, shareObj.h, 0, 0, 400, 400);
     return canvas.toDataURL('image/jpeg');
 }
 

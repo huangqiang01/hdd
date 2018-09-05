@@ -19,7 +19,7 @@ public class AddDataImpl implements AddData {
 	VerSqlParam verSql = new VerSqlParam();
 	
 	@Override
-	public String submitImgArr(String typeid, String albumid, String imguri, String imgwidth, String imgheight, String arrayname, String arraycontent, String arraynum) throws Exception {
+	public String submitImgArr(String typeid, String albumid, String imguri, String imgwidth, String imgheight, String arrayname, String arraycontent, String arraynum, String shareurl) throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         // 创建时间
@@ -30,15 +30,13 @@ public class AddDataImpl implements AddData {
         String isshow = String.valueOf('1');
         // 备注
         String reserve = "黄蛋蛋最帅!";
-        System.out.println(imgwidth);
-        System.out.println(imgheight);
-        
         // 验证是否数字
         verSql.checkNum(new String[]{ albumid, imgwidth, imgheight, arraynum });
         
         imguri = verSql.encodeString(imguri);
         // 1-2-3
         typeid = verSql.encodeString(typeid);
+        shareurl = verSql.encodeString(shareurl);
         
         verSql.checkLength(arrayname, 100);
         arrayname = verSql.codeHtml(arrayname);
@@ -46,7 +44,7 @@ public class AddDataImpl implements AddData {
         verSql.checkLength(arraycontent, 300);
         arraycontent = verSql.codeHtml(arraycontent);
         
-		return addDataDao.addMinArr(typeid, albumid, imguri, imgwidth, imgheight, arrayname, arraycontent, arraynum, createtime, updatetime, isshow, reserve);
+		return addDataDao.addMinArr(typeid, albumid, imguri, imgwidth, imgheight, arrayname, arraycontent, arraynum, createtime, updatetime, shareurl, isshow, reserve);
 	}
 	
 	@Override

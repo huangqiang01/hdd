@@ -12,9 +12,10 @@ CREATE TABLE `minphoto` (
   `updatetime` varchar(35) NOT NULL COMMENT '更新时间',
   `checknum` int(6) default '0' COMMENT '查看人数',
   `likenum` int(6) default '0' COMMENT '点赞人数',
+  `shareurl` varchar(80) default NULL COMMENT '分享图标路径',
   `isshow` char(2) default '1' COMMENT '是否显示',
   `reserve` varchar(80) default NULL COMMENT '备注',
-  PRIMARY KEY  (`id`,`createtime`)
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8 COMMENT='省略图--图片集合';
 
 CREATE TABLE `myphoto` (

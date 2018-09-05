@@ -34,9 +34,8 @@ public class AddDataDao {
 	 * @throws IOException
 	 * @throws QException 
 	 */
-	public String addMinArr(String typeid, String albumid, String imguri, String imgwidth, String imgheight,  String arrayname, String arraycontent, String arraynum, String createtime, String updatetime, String isshow, String reserve) throws Exception {
-		String sql = "insert into minphoto(typeid,albumid,imguri,imgwidth,imgheight,arrayname,arraycontent,arraynum,createtime,updatetime,isshow,reserve) values(?,?,?,?,?,?,?,?,?,?,?,?);";
-//		String sql = "insert into minphoto(id,typeid,imguri,imgwidth,imgheight,arrayname,arraynum,createtime,updatetime,isshow,reserve) values('0','" + typeid + "','" + imguri + "','" + imgwidth + "','" + imgheight + "','" + arrayname + "','" + arraynum + "','" + createtime + "','" + updatetime + "','" + isshow + "','" + reserve + "');";
+	public String addMinArr(String typeid, String albumid, String imguri, String imgwidth, String imgheight,  String arrayname, String arraycontent, String arraynum, String createtime, String updatetime, String shareurl, String isshow, String reserve) throws Exception {
+		String sql = "insert into minphoto(typeid,albumid,imguri,imgwidth,imgheight,arrayname,arraycontent,arraynum,createtime,updatetime,shareurl,isshow,reserve) values(?,?,?,?,?,?,?,?,?,?,?,?,?);";
 		dbh = new DBHelper(sql, Statement.RETURN_GENERATED_KEYS);
 		dbh.pst.setString(1, typeid);
 		dbh.pst.setString(2, albumid);
@@ -48,8 +47,9 @@ public class AddDataDao {
 		dbh.pst.setString(8, arraynum);
 		dbh.pst.setString(9, createtime);
 		dbh.pst.setString(10, updatetime);
-		dbh.pst.setString(11, isshow);
-		dbh.pst.setString(12, reserve);
+		dbh.pst.setString(11, shareurl);
+		dbh.pst.setString(12, isshow);
+		dbh.pst.setString(13, reserve);
 		dbh.pst.executeUpdate();
 		ResultSet rs = dbh.pst.getGeneratedKeys();
 		if (rs.next()) {  

@@ -86,7 +86,7 @@ $(function(){
 	function Qajax(param, success, aJson){
 		var ajaxP = {
 //					url: "/" + param.funNo + "?num=" + Math.random(), // 生产修改
-			url: "/" + param.funNo + "?num=" + Math.random(), // 生产修改
+			url: "/hdd/" + param.funNo + "?num=" + Math.random(), // 生产修改
 			async: true,
 			type: "post",
 			success: success,
