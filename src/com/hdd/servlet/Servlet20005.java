@@ -11,7 +11,7 @@ import com.hdd.service.impl.GetDataImpl;
 import com.hdd.utils.QOutput;
 
 /**
- * 描述：获取图片集合
+ * 描述：获取图片
  * @author Q
  */
 
@@ -28,9 +28,10 @@ public class Servlet20005 extends QOutput {
 		String id =request.getParameter("id");
 		String typeid =request.getParameter("typeid");
 		String minid =request.getParameter("minid");
+		String albumid =request.getParameter("albumid");
 		
 		try {
-			this.outPut(getDataImpl.getImgPhoto(id, typeid, minid), response);
+			this.outPut(getDataImpl.getImgPhoto(id, typeid, minid, albumid), response);
 		} catch (Exception e) {
 			this.outPut("-222", "系统内部错误！！！", response);
 			e.printStackTrace();

@@ -31,20 +31,20 @@ public class GetDataImpl implements GetData {
 	}
 
 	@Override
-	public OutResults getImgArr(String typeid, String minid) throws Exception {
+	public OutResults getImgArr(String typeid, String minid, String albumid) throws Exception {
 		
 		// 验证是否数字
-        verSql.checkNum(new String[]{ typeid, minid });
+        verSql.checkNum(new String[]{ typeid, minid, albumid });
 		
-		return getDataDao.getImgArr(typeid, minid);
+		return getDataDao.getImgArr(typeid, minid, albumid);
 	}
 
 	@Override
-	public OutResults getImgPhoto(String id, String typeid, String minid) throws Exception {
+	public OutResults getImgPhoto(String id, String typeid, String minid, String albumid) throws Exception {
 		// 验证是否数字
-        verSql.checkNum(new String[]{ id, typeid, minid });
+        verSql.checkNum(new String[]{ id, typeid, minid, albumid });
 		
-		return getDataDao.getImgHpoto(id, typeid, minid);
+		return getDataDao.getImgHpoto(id, typeid, minid, albumid);
 	}
 
 	@Override

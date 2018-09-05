@@ -15,23 +15,33 @@ var imgArr = [],
 	// 新建相册定时器
 	setCreat = null,
 	// 缩略图信息
-	firstminimg = {};
+	firstminimg = {},
+	// 发送请求
+	myRequest = null,
+	// 分享图标信息
+	shareObj = {};
 
 $(document).ready(function() {
 	// 获取图合集类型
 	queryPhototype();
 	// 获取相册
 	queryAlbum();
-
+	
+	// 选择分享头像
+	selectShareImg();
 	// 选择图片
 	$('.file-input').on('change', function(e) {
 		e.stopPropagation();
 		var files = e.target.files,
 			filesLength = files.length,
 			isNotImg = 0,
-			arrId = [];
-			console.log(files);
-			uploadLength = filesLength;
+			imgIndex = 0;
+		if (filesLength > 100) {
+			alert('上传图片数量过大');
+			return false;
+		}
+		// 上传长度（全局）
+		uploadLength = filesLength;
 		for (var i = 0; i < filesLength; i++) {
 			var item = files[i];
 			if (item.type.split('/')[0] !== 'image') {
@@ -40,13 +50,13 @@ $(document).ready(function() {
 			}
 			var reader = new FileReader();
 	      	reader.readAsDataURL(item);
-	      	reader.id = i;
 	      	reader.onloadstart = function () {
 	      		//用以在上传前加入一些事件或效果，如载入中...的动画效果
-	      		var id = getFileid();
-	      		$('.img-list-box').append(createHtml(id, this.id));
-	      		arrId.push(id);
-	      		if (arrId.length === filesLength) {
+	      		this.index = imgIndex;
+	      		this.id = getFileid();
+	      		$('.img-list-box').append(createHtml(this.id, imgIndex));
+	      		imgIndex++;
+	      		if (imgIndex === filesLength) {
 	      			// 绑定图片操作事件
 	      			bindImgClick();
 	      		}
@@ -56,7 +66,7 @@ $(document).ready(function() {
 		        	imgObj = {},
 		        	rethis = this;
 		        imaged.src = rethis.result;
-		        imaged.id = arrId.shift();
+		        imaged.id = rethis.id;
 		        // 利用canvas对图片进行压缩
 		        imaged.onload = function () {
 		        	var _this = this;
@@ -86,11 +96,12 @@ $(document).ready(function() {
 			        	content: '',
 			        	numno: ''
 			        };
-			        if (rethis.id === 0) {
+			        if (rethis.index === 0) {
 			        	firstminimg['minname'] = _this.id;
 			        	firstminimg['minwidth'] = w;
 			        	firstminimg['minheight'] = h;
 			        }
+			        // 存入处理完的集合（全局）
 			        imgArr.push(imgObj);
 		        };
 	      	};
@@ -99,6 +110,9 @@ $(document).ready(function() {
 	
 	// 提交
 	$('.subimt-img').on('click', function(e) {
+		// 初始化上传长度（全局）
+		uploadend = 0;
+		// 处理好后的集合长度（全局）
 		doimgLength = imgArr.length;
 		if (uploadLength === 0) {
 			return false;
@@ -112,6 +126,7 @@ $(document).ready(function() {
 				console.log('取消');
 			}
 		}
+		$('.cover-box').show();
 		// 上传
 		uploadFiles(imgArr[uploadend]);
 	});
@@ -140,6 +155,14 @@ $(document).ready(function() {
 		isCreatAlbum = true;
 		alert('暂时不支持此功能');
 	//	$('.select-album input').val('').addClass('active').prop('readonly', false).focus();
+	});
+	
+	// 取消请求
+	$('.cancel-btn span').on('click', function(e) {
+		if (myRequest == null) {
+			return false;
+		}
+		myRequest.abort();
 	});
 });
 
@@ -206,7 +229,7 @@ function queryAlbum() {
  * 设置图片大小
  */
 function setImgWH(imgwidth, imgheight) {
-	var imgMod = 1600;
+	var imgMod = 1200;
 	if (imgwidth >= imgheight) {
 		if (imgwidth < 600 || imgheight < 400) {
 			return null;
@@ -226,7 +249,6 @@ function setImgWH(imgwidth, imgheight) {
 }
 
 function createHtml(id, i) {
-	console.log(i);
 	var arr = [];
 	arr.push('<div class="img-info" id=' + id + '>');
 	arr.push('<div class="img">');
@@ -235,12 +257,12 @@ function createHtml(id, i) {
 	arr.push('<div class="img-describe">');
 	arr.push('<label for="first-img-' + id + '">');
 	arr.push('<span>是否设置为首图</span>');
-	arr.push('<input type="radio" ' + (i === 0 ? 'checked' : '') + ' name="selectFirst" id="first-img-' + id + '" />');
+	arr.push('<input type="radio" ' + (imgArr.length === 0 && i === 0 ? 'checked' : '') + ' name="selectFirst" id="first-img-' + id + '" />');
 	arr.push('</label>');
 	arr.push('<span class="img-title">图片标题</span>');
-	arr.push('<input type="text" />');
+	arr.push('<input class="img-title-input" type="text" />');
 	arr.push('<span class="img-title">图片描述</span>');
-	arr.push('<textarea></textarea>');
+	arr.push('<textarea class="img-content-input"></textarea>');
 	arr.push('</div>');
 	arr.push('</div>');
 	return arr.join('');
@@ -250,9 +272,10 @@ function createHtml(id, i) {
 function showImgInfo(img, id, width, height) {
 	var $imgInfo = $('#' + id).find('.img');
 	if (!img) {
-		$imgInfo.text('图片长边像素必须大于600，且短边像素必须大于400');
+		$imgInfo.append('<em>图片长边像素必须大于600，且短边像素必须大于400</em>');
 		return false;
 	}
+	$imgInfo.find('span').attr('data-mark', 'isimg');
 	var arr = [],
 		_w = width >= height ? '260' : (width * 260 / height).toFixed(0),
 		_h = width >= height ? (height * 260 / width).toFixed(0) : '260';
@@ -260,11 +283,13 @@ function showImgInfo(img, id, width, height) {
 	$('#first-img-' + id).attr('data-info', id + '_' + width + '_' + height);
 }
 
+// 生成图片名称
 function getFileid() {
 	var id = new Date().getTime();
 	return id + '_' + (Math.random() * 1000).toFixed(0);
 }
 
+// 绑定点击事件
 function bindImgClick() {
 	// 选择首个缩略图
 	$('.img-describe input[type=radio]').off('click').on('click', function() {
@@ -280,80 +305,108 @@ function bindImgClick() {
 	
 	// 删除图片
 	$('.img>span').off('click').on('click', function() {
-		var id = $(this).attr('data-id');
+		var $this = $(this),
+			id = $this.attr('data-id');
 		if (!id) {
 			return false;
 		}
-		$('#' + id).remove();
+		// 处理相关数据
+		doDelData(id, $this);
 	});
 	
+}
+
+// 处理删除图片后的数据，
+function doDelData(id, $this) {
+	if (firstminimg['minname'] === id) {
+		alert('次图片被选中，不能删除');
+		return false;
+	}
+	if ($this.attr('data-mark')) {
+		// 剩余图片集合
+		imgArr = removeArrVal(imgArr, id, 'imgid');
+		// 处理成功的图片
+		doimgLength--;
+	}
+	// 移除图片
+	$('#' + id).remove();
+	// 上传图片的长度
+	uploadLength--;
 }
 
 function checkArrInfo() {
 	// 图集标题
 	var arrTitle = $('.arr-title').val();
-//	// 图鉴描述
-//	var arrDescribe = $('.arr-describe').val();
-//	// 图集标签
-//	var arrDescribe = selectSign.join('_');
 	if (!arrTitle.trim()) {
 		alert('图集标题不能为空');
+		return false;
+	}
+	if (!firstminimg.minname) {
+		alert('请选择图集缩略图');
 		return false;
 	}
 	return true;
 }
 
 function uploadFiles(obj) {
-	
 	// 需要发送的数据
 	var formData = new FormData();
-	//使用ajax发送
-	var myRequest = new XMLHttpRequest();
+	//使用ajax发送(全局)
+	myRequest = new XMLHttpRequest();
 	if (!obj) {
-		formData.append('islast', 'true');
 		formData.append('arrtitle', $('.arr-title').val());
 		formData.append('arrcontent', $('.arr-describe').val().trim());
 		formData.append('arrtips', selectSign.join('_'));
 		formData.append('arralbum', selectAlbum);
-		formData.append('firsturl', selectAlbum);
+		formData.append('firsturl', firstminimg.minname + '.jpg');
+		formData.append('firstwidth', firstminimg.minwidth);
+		formData.append('firstheight', firstminimg.minheight);
+		
+		var blob = dataURLtoBlob(getCutInfo()),
+			id = new Date().getTime();
+		formData.append('image', blob, 'share_' + id + '.jpg');
 	} else {
-		var blob = dataURLtoBlob(obj.img);
-		formData.append('image', blob, obj.imgid + '.jpg');
+		var blob = dataURLtoBlob(obj.img),
+			id = obj.imgid;
+		formData.append('image', blob, id + '.jpg');
 		formData.append('imgw_h', obj.imgw_h);
-		formData.append('title', obj.title);
-		formData.append('content', obj.content);
+		formData.append('title', $('#' + id + ' .img-title-input').val());
+		formData.append('content', $('#' + id + ' .img-content-input').val());
 		formData.append('numno', obj.numno);
+		if (uploadend === 0) {
+			formData.append('firstupload', '1');
+		}
 		// 进度条
 		myRequest.upload.onprogress = updateProgress;
 		myRequest.upload.onload = transferComplete;
 		myRequest.upload.onerror = transferFailed;
 		myRequest.upload.onabort = transferCanceled;
-		myRequest.upload.onloadstart = function(){//上传开始执行方法
-	        console.log('---');
-	    };
+		$('.upload-total').text((uploadend + 1) + '/' + doimgLength);
 	}
 	formData.enctype = 'multipart/form-data';
-	myRequest.open('POST', 'http://192.168.9.24:8081/hdd/20001');
+	// 生产修改
+	myRequest.open('POST', '/20001');
 	myRequest.onreadystatechange = function() {
-    	if(myRequest.readyState == 4 && myRequest.status == 200){    
-            var b = JSON.parse(myRequest.responseText);    
-            if(b.error_no === "0"){
+    	if (myRequest.readyState == 4 && myRequest.status == 200){
+            var b = JSON.parse(myRequest.responseText);
+            if (b.error_no === "0"){
             	if (!obj) {
-            		alert('完成');
+//            		alert('完成');
+            		window.location.reload();
             	} else {
             		uploadend++;
             		uploadFiles(imgArr[uploadend]);
             	}
-            }else{    
-                alert(b.error_info);    
-            }           
+            } else {
+                alert(b.error_info);
+                $('.cover-box').hide();
+            }
         }
-        
-     // 上传
     };
     myRequest.send(formData);
 }
 
+// 将图片转成二进制
 function dataURLtoBlob(dataurl) {
     var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
@@ -366,41 +419,92 @@ function dataURLtoBlob(dataurl) {
 //上传进度实现方法，上传过程中会频繁调用该方法
 function updateProgress(evt) {
      // event.total是需要传输的总字节，event.loaded是已经传输的字节。如果event.lengthComputable不为真，则event.total等于0
-     if (evt.lengthComputable) {//
-//         progressBar.max = evt.total;
-//         progressBar.value = evt.loaded;
-         console.log(Math.round(evt.loaded / evt.total * 100) + "%");
+     if (evt.lengthComputable) {
+    	 var rate = Math.round(evt.loaded / evt.total * 100);
+    	 $('.runner').css('width', (100 - rate) + '%');
+    	 $('.upload-num-img').text(rate + '%');
      }
 }
 
 //上传成功响应
 function transferComplete(evt) {
- //服务断接收完文件返回的结果
- //    alert(evt.target.responseText);
-//     alert("上传成功！");
+	
 }
 //上传失败
 function transferFailed(evt) {
-//    alert("上传失败！");
+	alert('网络异常');
+	$('.cover-box').hide();
 }
   //取消上传
 function transferCanceled(){
-    xhr.abort();
+    console.log('请求已取消');
+    $('.cover-box').hide();
 }
 
 
 // 移除指定的值
-function removeArrVal(arr, val) {
-	var index = arr.indexOf(val);
-	if (index > -1) {
-		arr.splice(index, 1);
+function removeArrVal(arr, val, key) {
+	if (key) {
+		var _arr = [];
+		arr.map(function(item) {
+			if (item[key] !== val) {
+				_arr.push(item);
+			}
+		});
+		return _arr;
+	} else {
+		var index = arr.indexOf(val);
+		if (index > -1) {
+			arr.splice(index, 1);
+		}
+		return arr;
 	}
-	return arr;
 }
 
 
+function selectShareImg() {
+	$('.file-input-share').on('change', function(e) {
+		e.stopPropagation();
+		var files = e.target.files[0];
+		var reader = new FileReader();
+      	reader.readAsDataURL(files);
+      	reader.onloadend = function (e) {
+	        var imaged = new Image();
+	        imaged.src = this.result;
+	        console.log(this);
+	        // 利用canvas对图片进行压缩
+	        imaged.onload = function () {
+	        	$('.img-container').html(this);
+	        	shareObj.img = this;
+	        	// cut-img
+	        	cutImg();
+	        };
+      	};
+	});
+}
 
+function cutImg() {
+	$('.img-container > img').cropper({
+		aspectRatio: 10 / 10,
+		preview: '.img-preview',
+		crop: function(data) {
+			shareObj.x = data.x;
+			shareObj.y = data.y;
+			shareObj.w = data.width;
+			shareObj.h = data.height;
+			console.log(shareObj);
+		}
+	});
+}
 
+function getCutInfo() {
+	var canvas = document.createElement('canvas');
+  	var ctx = canvas.getContext('2d');
+    canvas.width = shareObj.w;
+    canvas.height = shareObj.h;
+    ctx.drawImage(shareObj.img, 0, 0, shareObj.w, shareObj.h, shareObj.x, shareObj.y, 500, 500);
+    return canvas.toDataURL('image/jpeg');
+}
 
 
 

@@ -15,13 +15,12 @@ public class ImgPhoto implements Serializable {
 	private String id;
 	private String typeid;
 	private String minid;
+	private String albumid;
 	private String uri;
 	private String imgwidth;
 	private String imgheight;
 	private String imgtitle;
 	private String imgcontent;
-	private String isshow;
-	private String reserve;
 	public String getId() {
 		return id;
 	}
@@ -39,6 +38,12 @@ public class ImgPhoto implements Serializable {
 	}
 	public void setMinid(String minid) {
 		this.minid = minid;
+	}
+	public String getAlbumid() {
+		return albumid;
+	}
+	public void setAlbumid(String albumid) {
+		this.albumid = albumid;
 	}
 	public String getUri() {
 		return uri;
@@ -70,18 +75,5 @@ public class ImgPhoto implements Serializable {
 	public void setImgcontent(String imgcontent) {
 		this.imgcontent = imgcontent;
 	}
-	public String getIsshow() {
-		return isshow;
-	}
-	public void setIsshow(String isshow) {
-		this.isshow = isshow;
-	}
-	public String getReserve() {
-		return reserve;
-	}
-	public void setReserve(String reserve) {
-		this.reserve = reserve;
-	}
-	
 	
 }

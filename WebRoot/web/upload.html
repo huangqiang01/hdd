@@ -12,11 +12,12 @@
 		<meta http-equiv="Cache-Control" content="no-store" />
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Expires" content="0" />
-		<title></title>
+		<title>hdd</title>
 		<link rel="shortcut icon" type="image/x-icon" href="../common/img/favicon.ico">
 		<link rel="stylesheet" href="../common/css/reset.css" />
 		<link rel="stylesheet" href="css/style.css" />
-		<script type="text/javascript" src="../common/js/jquery-1.11.1.min.js" ></script>
+		<link rel="stylesheet" type="text/css" href="cropper/cropper.css"/>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" src="../common/js/Qinit.js" ></script>
 	</head>
 
@@ -46,11 +47,11 @@
 		<div class="submit-img-box">
 			<div class="input-box">
 				<span>标题</span>
-				<input type="text" class="arr-title" />
+				<input type="text" maxlength="100" class="arr-title" />
 			</div>
 			<div class="input-box">
 				<span>作品描述</span>
-				<textarea class="arr-describe"></textarea>
+				<textarea class="arr-describe" maxlength="300"></textarea>
 			</div>
 			<div class="input-box">
 				<span>标签</span>
@@ -66,21 +67,36 @@
 					<span>新建相册</span>
 				</div>
 			</div>
+			<div class="input-box">
+				<span>添加分享图标</span>
+				<div class="img-cut-box">
+					<div class="add-btn">
+						<span>选择图片</span>
+						<input type="file" class="file-input-share" accept="image/jpeg,image/jpg" />
+					</div>
+					<div class="input-img-cut">
+						<div class="img-container"></div>
+					</div>
+					<div class="img-preview"></div>
+					<div class="clearfix"></div>
+				</div>
+			</div>
 			<span class="subimt-img">提交</span>
 		</div>
 		<div class="cover-box cover-img" style="display: none;"></div>
 		<div class="cover-box cover-btn" style="display: none;">
 			<div class="loader-box">
-					<div class="runner"></div>
+				<div style="width: 100%;" class="runner"></div>
 			</div>
 			<div class="upload-num">
-				<span>100%</span>
-				<span>1/2</span>
+				<span class="upload-num-img">0%</span>
+				<span class="upload-total"></span>
 			</div>
 			<div class="cancel-btn">
 				<span>取消</span>
 			</div>
 		</div>
 	</body>
+	<script src="cropper/cropper.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/upload.js" type="text/javascript" charset="utf-8"></script>
 </html>

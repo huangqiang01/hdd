@@ -14,17 +14,17 @@ public class ImgArr implements Serializable {
 	private static final long serialVersionUID = 773534906664586976L;
 	private String id;
 	private String typeid;
+	private String albumid;
 	private String imguri;
 	private String imgwidth;
 	private String imgheight;
 	private String arrayname;
+	private String arraycontent;
 	private String arraynum;
 	private String createtime;
 	private String updatetime;
 	private String checknum;
 	private String likenum;
-	private String isshow;
-	private String reserve;
 	public String getId() {
 		return id;
 	}
@@ -36,6 +36,12 @@ public class ImgArr implements Serializable {
 	}
 	public void setTypeid(String typeid) {
 		this.typeid = typeid;
+	}
+	public String getAlbumid() {
+		return albumid;
+	}
+	public void setAlbumid(String albumid) {
+		this.albumid = albumid;
 	}
 	public String getImguri() {
 		return imguri;
@@ -60,6 +66,12 @@ public class ImgArr implements Serializable {
 	}
 	public void setArrayname(String arrayname) {
 		this.arrayname = arrayname;
+	}
+	public String getArraycontent() {
+		return arraycontent;
+	}
+	public void setArraycontent(String arraycontent) {
+		this.arraycontent = arraycontent;
 	}
 	public String getArraynum() {
 		return arraynum;
@@ -91,18 +103,4 @@ public class ImgArr implements Serializable {
 	public void setLikenum(String likenum) {
 		this.likenum = likenum;
 	}
-	public String getIsshow() {
-		return isshow;
-	}
-	public void setIsshow(String isshow) {
-		this.isshow = isshow;
-	}
-	public String getReserve() {
-		return reserve;
-	}
-	public void setReserve(String reserve) {
-		this.reserve = reserve;
-	}
-	
-	
 }

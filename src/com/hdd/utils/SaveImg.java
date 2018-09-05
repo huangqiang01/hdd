@@ -68,15 +68,15 @@ public class SaveImg {
 		String image = (String) params.get("image");
 		String name = (String) params.get("name");
         String imgw_h = (String) params.get("imgw_h");
-        String isFirst = (String) params.get("isFirst");
+        String isfirst = (String) params.get("isfirst");
         String title = (String) params.get("title");
         String content = (String) params.get("content");
         String numno = (String) params.get("numno");
         // 获得文件输入流
 		BufferedImage src = ImageIO.read(new File(image));
 		String[] w_h = imgw_h.split("_");
-		int imgWidth = (int) (Integer.parseInt(w_h[0]) * 0.35);
-		int imgHeight = (int) (Integer.parseInt(w_h[1]) * 0.35);
+		int imgWidth = (int) (Integer.parseInt(w_h[0]) * 0.4);
+		int imgHeight = (int) (Integer.parseInt(w_h[1]) * 0.4);
         // 处理缩略图
         return doPageImg(src, imgWidth, imgHeight, savePathMin, name);
 	}

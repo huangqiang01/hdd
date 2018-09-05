@@ -127,6 +127,17 @@ div {
   background: #ccc;
   z-index: 1;
 }
+.add-img-box .img-list-box .img > em {
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-style: normal;
+  width: 100%;
+  font-size: 15px;
+  padding: 10px;
+}
 .add-img-box .img-list-box .img > span {
   position: relative;
   display: block;
@@ -433,6 +444,7 @@ div {
 }
 .loader-box {
   position: relative;
+  overflow: hidden;
   height: 6px;
   width: 100%;
   background-color: transparent;
@@ -446,11 +458,12 @@ div {
   position: absolute;
   right: 0;
   height: 100%;
-  width: 10%;
   border-radius: 0 3px 3px 0;
   background-color: transparent;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#676767));
   background-image: linear-gradient(top, #ffffff, #676767);
+  -webkit-transition: width;
+  transition: width;
 }
 .upload-num {
   margin-top: 8px;
@@ -484,4 +497,68 @@ div {
 }
 .cancel-btn span:hover {
   background: #ffc00e;
+}
+.input-img-cut {
+  position: relative;
+  float: left;
+  width: 70%;
+}
+.img-cut-box {
+  position: relative;
+}
+.img-cut-box:after {
+  content: "";
+  position: absolute;
+  display: table;
+  clear: both;
+}
+.img-cut-box .add-btn {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  margin-bottom: 10px;
+}
+.img-cut-box .add-btn > span {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 160px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 3px;
+  background: #ffca33;
+  color: #fff;
+}
+.img-cut-box .add-btn > span:hover {
+  background: #ffbf0a;
+}
+.img-cut-box .add-btn .file-input-share {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 160px;
+  height: 40px;
+  z-index: 100;
+  outline: none;
+  border: none;
+  opacity: 0;
+}
+.img-container {
+  float: left;
+  width: 100%;
+  max-width: 250px;
+}
+.img-container img {
+  width: 100%;
+}
+.img-preview {
+  float: right;
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+}
+.img-preview img {
+  width: 100%;
 }

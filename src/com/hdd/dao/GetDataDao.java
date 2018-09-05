@@ -43,14 +43,13 @@ public class GetDataDao {
 		OutResults or = new OutResults();
 		//模拟获取数据库数据
 		ImgArrType imgArrType;
-		dbh = new DBHelper("select p.id,p.typename,p.introduce,p.reserve from phototype as p where isshow=1 order by id;");
+		dbh = new DBHelper("select p.id,p.typename,p.introduce from phototype as p where isshow=1 order by id;");
 		rs = dbh.pst.executeQuery();
 		while(rs.next()){
 			imgArrType = new ImgArrType();
 			imgArrType.setId(rs.getString("id"));
 			imgArrType.setTypename(rs.getString("typename"));
 			imgArrType.setIntroduce(rs.getString("introduce"));
-			imgArrType.setReserve(rs.getString("reserve"));
 			list.add(imgArrType);
 		}
 		or.setResults(list);
@@ -62,13 +61,16 @@ public class GetDataDao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public OutResults getImgArr(String typeid, String minid) throws Exception{
-		String sql = "select m.id,m.typeid,m.imguri,m.imgwidth,m.imgheight,m.arrayname,m.arraynum,m.createtime,m.updatetime,m.checknum,m.likenum,m.reserve from minphoto as m where isshow=1 ";
+	public OutResults getImgArr(String typeid, String minid, String albumid) throws Exception{
+		String sql = "select m.id,m.typeid,m.albumid,m.imguri,m.imgwidth,m.imgheight,m.arrayname,m.arraycontent,m.arraynum,m.createtime,m.updatetime,m.checknum,m.likenum from minphoto as m where isshow=1 ";
 		if (typeid != null && !typeid.equals("") && typeid.matches("\\d+")) {
 			sql += "and typeid=" + typeid + " ";
 		}
 		if (minid != null && !minid.equals("") && minid.matches("\\d+")) {
 			sql += "and id=" + minid + " ";
+		}
+		if (albumid != null && !albumid.equals("") && albumid.matches("\\d+")) {
+			sql += "and albumid=" + albumid + " ";
 		}
 		sql += "order by id;";
 		List list = new ArrayList();
@@ -81,16 +83,17 @@ public class GetDataDao {
 			imgArr = new ImgArr();
 			imgArr.setId(rs.getString("id"));
 			imgArr.setTypeid(rs.getString("typeid"));
+			imgArr.setAlbumid(rs.getString("albumid"));
 			imgArr.setImguri(verSql.decodeString(rs.getString("imguri")));
 			imgArr.setImgwidth(rs.getString("imgwidth"));
 			imgArr.setImgheight(rs.getString("imgheight"));
 			imgArr.setArrayname(verSql.decodeString(rs.getString("arrayname")));
+			imgArr.setArraycontent(verSql.decodeString(rs.getString("arraycontent")));
 			imgArr.setArraynum(rs.getString("arraynum"));
 			imgArr.setCreatetime(rs.getString("createtime"));
 			imgArr.setUpdatetime(rs.getString("updatetime"));
 			imgArr.setChecknum(rs.getString("checknum"));
 			imgArr.setLikenum(rs.getString("likenum"));
-			imgArr.setReserve(rs.getString("reserve"));
 			list.add(imgArr);
 		}
 		or.setResults(list);
@@ -102,8 +105,8 @@ public class GetDataDao {
 	 * @return
 	 * @throws SQLException
 	 */
-	public OutResults getImgHpoto(String id, String typeid, String minid) throws Exception{
-		String sql = "select m.id,m.typeid,m.minid,m.uri,m.imgwidth,m.imgheight,m.imgtitle,m.imgcontent,m.reserve from myphoto as m where isshow=1 ";
+	public OutResults getImgHpoto(String id, String typeid, String minid, String albumid) throws Exception{
+		String sql = "select m.id,m.typeid,m.minid,m.albumid,m.uri,m.imgwidth,m.imgheight,m.imgtitle,m.imgcontent from myphoto as m where isshow=1 ";
 		if (id != null && !id.equals("") && id.matches("\\d+")) {
 			sql += "and id=" + id + " ";
 		}
@@ -112,6 +115,9 @@ public class GetDataDao {
 		}
 		if (minid != null && !minid.equals("") && minid.matches("\\d+")) {
 			sql += "and minid=" + minid + " ";
+		}
+		if (albumid != null && !albumid.equals("") && albumid.matches("\\d+")) {
+			sql += "and albumid=" + albumid + " ";
 		}
 		sql += "order by id;";
 		List list = new ArrayList();
@@ -125,12 +131,12 @@ public class GetDataDao {
 			imgPhoto.setId(rs.getString("id"));
 			imgPhoto.setTypeid(rs.getString("typeid"));
 			imgPhoto.setMinid(rs.getString("minid"));
+			imgPhoto.setAlbumid(rs.getString("albumid"));
 			imgPhoto.setUri(verSql.decodeString(rs.getString("uri")));
 			imgPhoto.setImgwidth(rs.getString("imgwidth"));
 			imgPhoto.setImgheight(rs.getString("imgheight"));
 			imgPhoto.setImgtitle(verSql.decodeString(rs.getString("imgtitle")));
 			imgPhoto.setImgcontent(verSql.decodeString(rs.getString("imgcontent")));
-			imgPhoto.setReserve(rs.getString("reserve"));
 			list.add(imgPhoto);
 		}
 		or.setResults(list);
