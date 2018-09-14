@@ -115,5 +115,56 @@ public class AddDataDao {
 		}
 	}
 	
+	/**
+	 * 保存文章列表
+	 * @author Q
+	 * @created 
+	 * @since 
+	 * @throws SQLException
+	 * @throws IOException
+	 * @throws QException 
+	 */
+	public String addArticleArr(String itemid, String title, String articledesc, String createtime, String writer, String isshow, String reserve) throws Exception {
+		String sql = "insert into web_list(itemid,title,articledesc,createtime,writer,isshow,reserve) values(?,?,?,?,?,?,?);";
+		dbh = new DBHelper(sql, Statement.RETURN_GENERATED_KEYS);
+		dbh.pst.setString(1, itemid);
+		dbh.pst.setString(2, title);
+		dbh.pst.setString(3, articledesc);
+		dbh.pst.setString(4, createtime);
+		dbh.pst.setString(5, writer);
+		dbh.pst.setString(6, isshow);
+		dbh.pst.setString(7, reserve);
+		dbh.pst.executeUpdate();
+		ResultSet rs = dbh.pst.getGeneratedKeys();
+		if (rs.next()) {  
+            int id = rs.getInt(1);  
+            return id + "";
+        }
+		throw new QException("-2", "保存文章异常");
+	}
 	
+	/**
+	 * 保存文章
+	 * @author Q
+	 * @created 2016
+	 * @since 
+	 * @throws SQLException
+	 * @throws IOException
+	 * @throws QException 
+	 */
+	public boolean addArticle(String itemid, String listid, String content, String isshow, String reserve) throws Exception {
+		String sql = "insert into web_content(itemid,listid,content,isshow,reserve) values(?,?,?,?,?)";
+		dbh = new DBHelper(sql);
+		dbh.pst.setString(1, itemid);
+		dbh.pst.setString(2, listid);
+		dbh.pst.setString(3, content);
+		dbh.pst.setString(4, isshow);
+		dbh.pst.setString(5, reserve);
+		int up_num = dbh.pst.executeUpdate();
+		if (up_num > 0) {
+			return true;
+		} else {
+			throw new QException("-3", "保存文章异常");
+		}
+	}
 }

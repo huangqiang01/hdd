@@ -147,13 +147,13 @@ function isClickLike(id) {
 
 // 分享内容
 function shareCon(title, content, imgurl) {
+	title = stringHtml(title);
+	content = stringHtml(content);
 	$.ajax({
 		url: "/app/signatureServlet?param=signature",
 		type: "post",
 		dataType: "json",
 		success: function(data){
-			title = stringHtml(title);
-			title = stringHtml(content);
 			// 页面功能授权
 			wxToFunction(data, title, content, imgurl);
 		}

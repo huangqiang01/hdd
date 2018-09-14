@@ -54,4 +54,31 @@ public class GetDataImpl implements GetData {
 		
 		return getDataDao.getImgAlbum(id);
 	}
+
+	@Override
+	public OutResults getArticleType() throws SQLException {
+		return getDataDao.getArticleType();
+	}
+
+	@Override
+	public OutResults getArticleList(String itemid, String str) throws Exception {
+		
+		if (itemid != null) {
+			// 验证是否数字
+	        verSql.checkNum(new String[]{ itemid });
+		}
+		
+		if (str != null) {
+			str = verSql.encodeString(str);
+		}
+		return getDataDao.getArticleArr(itemid, str);
+	}
+
+	@Override
+	public OutResults getArticleContent(String id) throws Exception {
+		// 验证是否数字
+        verSql.checkNum(new String[]{ id });
+        
+		return getDataDao.getArticleDetials(id);
+	}
 }

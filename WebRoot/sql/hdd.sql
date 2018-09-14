@@ -58,6 +58,43 @@ CREATE TABLE `phototype` (
 insert into phototype values(0,'人像','','1','');
 insert into phototype values(0,'旅游','','1','');
 
+CREATE TABLE `web_item` (
+  `id` int(4) NOT NULL auto_increment,
+  `itemname` varchar(40) default NULL COMMENT '类型名称',
+  `introduce` text COMMENT '简介',
+  `isshow` char(2) default NULL,
+  `reserve` varchar(80) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+insert into web_item values(0,'HTML','','1','');
+insert into web_item values(0,'JS','','1','');
+insert into web_item values(0,'CSS','','1','');
+
+CREATE TABLE `web_list` (
+  `id` int(4) NOT NULL auto_increment,
+  `itemid` char(4) default NULL COMMENT '类型id',
+  `title` varchar(300) default NULL COMMENT 'title',
+  `articledesc` text,
+  `createtime` varchar(35) default NULL,
+  `writer` varchar(60) default NULL,
+  `isshow` char(2) default NULL,
+  `reserve` varchar(80) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `web_content` (
+  `id` int(4) NOT NULL auto_increment,
+  `itemid` char(4) default NULL,
+  `listid` char(4) default NULL,
+  `content` text,
+  `isshow` char(2) default NULL,
+  `reserve` varchar(80) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
 
 
 

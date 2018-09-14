@@ -36,8 +36,48 @@
     <servlet-name>Servlet20007</servlet-name>
     <servlet-class>com.hdd.servlet.Servlet20007</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>Servlet20008</servlet-name>
+    <servlet-class>com.hdd.servlet.Servlet20008</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Servlet20009</servlet-name>
+    <servlet-class>com.hdd.servlet.Servlet20009</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Servlet20010</servlet-name>
+    <servlet-class>com.hdd.servlet.Servlet20010</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Servlet20011</servlet-name>
+    <servlet-class>com.hdd.servlet.Servlet20011</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Servlet20012</servlet-name>
+    <servlet-class>com.hdd.servlet.Servlet20012</servlet-class>
+  </servlet>
   
   
+  <servlet-mapping>
+    <servlet-name>Servlet20012</servlet-name>
+    <url-pattern>/20012</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet20011</servlet-name>
+    <url-pattern>/20011</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet20010</servlet-name>
+    <url-pattern>/20010</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet20009</servlet-name>
+    <url-pattern>/20009</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet20008</servlet-name>
+    <url-pattern>/20008</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Servlet20007</servlet-name>
     <url-pattern>/20007</url-pattern>

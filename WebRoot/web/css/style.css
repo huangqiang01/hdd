@@ -443,6 +443,11 @@ div {
   margin: 0 auto;
   z-index: 1001;
 }
+.cover-btn-info {
+  text-align: center;
+  font-size: 30px;
+  color: #fff;
+}
 .loader-box {
   position: relative;
   overflow: hidden;
@@ -562,4 +567,29 @@ div {
 }
 .img-preview img {
   width: 100%;
+}
+.editor-content {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  outline: none;
+  -webkit-transition: border-color ease-in-out 0.15s, -webkit-box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, -webkit-box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s, -webkit-box-shadow ease-in-out 0.15s;
+  color: #555;
+  padding: 8px;
+  font-size: 15px;
+  resize: vertical;
+  height: 600px;
+}
+.editor-content:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
 }

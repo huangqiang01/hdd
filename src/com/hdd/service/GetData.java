@@ -50,4 +50,25 @@ public interface GetData extends Serializable {
 	 */
 	public OutResults getAlbum(String id) throws Exception;
 	
+	/**
+	 * 获取文章标签
+	 * @return
+	 * @throws SQLException
+	 */
+	public OutResults getArticleType() throws SQLException;
+	
+	/**
+	 * 获取文章列表
+	 * @return
+	 * @throws SQLException
+	 */
+	public OutResults getArticleList(String itemid, String str) throws Exception;
+	
+	/**
+	 * 获取文章内容
+	 * @return
+	 * @throws SQLException
+	 */
+	public OutResults getArticleContent(String id) throws Exception;
+	
 }

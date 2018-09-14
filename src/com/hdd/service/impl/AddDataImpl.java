@@ -76,4 +76,41 @@ public class AddDataImpl implements AddData {
         verSql.checkNum(new String[]{ checknum, likenum, id });
 		return addDataDao.addCheckNum(checknum, likenum, id);
 	}
+
+	@Override
+	public String submitArticleArr(String itemid, String title, String desc, String writer) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        // 创建时间
+        String createtime = sdf.format(date);
+        // 是否显示，1-默认显示
+        String isshow = String.valueOf('1');
+        // 备注
+        String reserve = "黄蛋蛋最帅!";
+        // 验证是否数字
+        verSql.checkNum(new String[]{ itemid });
+        
+        writer = verSql.encodeString(writer);
+        
+        verSql.checkLength(title, 200);
+        title = verSql.codeHtml(title);
+        
+        verSql.checkLength(desc, 600);
+        desc = verSql.codeHtml(desc);
+        
+		return addDataDao.addArticleArr(itemid, title, desc, createtime, writer, isshow, reserve);
+	}
+
+	@Override
+	public boolean submitArticle(String itemid, String listid, String content) throws Exception {
+		// 是否显示，1-默认显示
+        String isshow = String.valueOf('1');
+        // 备注
+        String reserve = "黄蛋蛋最帅!";
+        
+        // 验证是否数字
+        verSql.checkNum(new String[]{ itemid, listid });
+        
+		return addDataDao.addArticle(itemid, listid, content, isshow, reserve);
+	}
 }

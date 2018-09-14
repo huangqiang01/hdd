@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hdd.bean.ArticleContent;
+import com.hdd.bean.ArticleList;
+import com.hdd.bean.ArticleType;
 import com.hdd.bean.ImgArr;
 import com.hdd.bean.ImgArrType;
 import com.hdd.bean.ImgPhoto;
@@ -176,5 +179,93 @@ public class GetDataDao {
 		return or;
 	}
 	
+	/**
+	 * 
+	 * 描述：获取文章标签类型
+	 * @author Q
+	 * @created 2016年7月4日 下午2:37:41
+	 * @since 
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public OutResults getArticleType() throws SQLException {
+		List list = new ArrayList();
+		OutResults or = new OutResults();
+		ArticleType articleType;
+		dbh = new DBHelper("select w.id,w.itemname,w.introduce from web_item as w where isshow=1 order by id;");
+		rs = dbh.pst.executeQuery();
+		while(rs.next()){
+			articleType = new ArticleType();
+			articleType.setId(rs.getString("id"));
+			articleType.setItemname(rs.getString("itemname"));
+			articleType.setIntroduce(rs.getString("introduce"));
+			list.add(articleType);
+		}
+		or.setResults(list);
+		return or;
+	}
+	
+	/**
+	 * 获取文章列表
+	 * @return
+	 * @throws SQLException
+	 */
+	public OutResults getArticleArr(String itemid, String str) throws Exception{
+		String sql = "select w.id,w.itemid,w.title,w.articledesc,w.createtime,w.writer from web_list as w where isshow=1 ";
+		if (itemid != null && !itemid.equals("") && itemid.matches("\\d+")) {
+			sql += "and itemid=" + itemid + " ";
+		}
+		if (str != null && !str.equals("")) {
+			sql += "and articledesc=%" + str + "% ";
+		}
+		sql += "order by id;";
+		List list = new ArrayList();
+		OutResults or = new OutResults();
+		//模拟获取数据库数据
+		ArticleList articleList;
+		dbh = new DBHelper(sql);
+		rs = dbh.pst.executeQuery();
+		while(rs.next()){
+			articleList = new ArticleList();
+			articleList.setId(rs.getString("id"));
+			articleList.setItemid(rs.getString("itemid"));
+			articleList.setTitle(verSql.decodeString(rs.getString("title")));
+			articleList.setArticledesc(verSql.decodeString(rs.getString("articledesc")));
+			articleList.setCreatetime(rs.getString("createtime"));
+			articleList.setWriter(verSql.decodeString(rs.getString("writer")));
+			list.add(articleList);
+		}
+		or.setResults(list);
+		return or;
+	}
+	
+	/**
+	 * 获取文章详情
+	 * @return
+	 * @throws SQLException
+	 */
+	public OutResults getArticleDetials(String id) throws Exception{
+		String sql = "select w.id,w.itemid,w.listid,w.content from web_content as w where isshow=1 ";
+		if (id != null && !id.equals("") && id.matches("\\d+")) {
+			sql += "and id=" + id + " ";
+		}
+		sql += "order by id;";
+		List list = new ArrayList();
+		OutResults or = new OutResults();
+		//模拟获取数据库数据
+		ArticleContent articleContent;
+		dbh = new DBHelper(sql);
+		rs = dbh.pst.executeQuery();
+		while(rs.next()){
+			articleContent = new ArticleContent();
+			articleContent.setId(rs.getString("id"));
+			articleContent.setItemid(rs.getString("itemid"));
+			articleContent.setListid(rs.getString("listid"));
+			articleContent.setContent(rs.getString("content"));
+			list.add(articleContent);
+		}
+		or.setResults(list);
+		return or;
+	}
 	
 }

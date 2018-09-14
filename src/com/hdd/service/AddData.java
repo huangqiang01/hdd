@@ -45,5 +45,29 @@ public interface AddData extends Serializable {
 	 * @return
 	 */
 	public boolean updateCheckZan(String checknum, String likenum, String id) throws Exception;
+	
+	/**
+	 * 提交文章列表
+	 * @param itemid
+	 * @param title
+	 * @param desc
+	 * @param createtime
+	 * @param writer
+	 * @param reserve
+	 * @return
+	 * @throws Exception
+	 */
+	public String submitArticleArr(String itemid, String title, String desc, String writer) throws Exception;
+	
+	/**
+	 * 提交文章详情
+	 * @param itemid
+	 * @param listid
+	 * @param content
+	 * @param reserve
+	 * @return
+	 * @throws SQLException
+	 */
+	public boolean submitArticle(String itemid, String listid, String content) throws Exception;
 
 }

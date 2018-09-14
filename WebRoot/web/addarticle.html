@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!--<meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />-->
+		<meta name="apple-touch-fullscreen" content="yes" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="format-detection" content="telephone=no">
+		<meta name="description" content="This a page for HDD" />
+		<meta http-equiv="Cache-Control" content="no-store" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<title>hdd</title>
+		<link rel="shortcut icon" type="image/x-icon" href="../common/img/favicon.ico">
+		<link rel="stylesheet" href="../common/css/reset.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" type="text/css" href="markdown/editormd.min.css"/>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="markdown/editormd.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../common/js/Qinit.js" ></script>
+	</head>
+
+	<body>
+		<div class="add-img-box">
+			<div id="editormd">
+			    <textarea style="display:none;"></textarea>
+			</div>
+		</div>
+		<div class="submit-img-box">
+			<div class="input-box">
+				<span>标题</span>
+				<input type="text" maxlength="100" class="arr-title" />
+			</div>
+			<div class="input-box">
+				<span>笔记描述</span>
+				<textarea class="arr-describe" maxlength="300"></textarea>
+			</div>
+			<div class="input-box">
+				<span>标签</span>
+				<div class="img-sign"></div>
+			</div>
+			<!--<div class="input-box">
+				<span>添加分享图标</span>
+				<div class="img-cut-box">
+					<div class="add-btn">
+						<span>选择图片</span>
+						<input type="file" class="file-input-share" accept="image/jpeg,image/jpg" />
+					</div>
+					<div class="input-img-cut">
+						<div class="img-container"></div>
+					</div>
+					<div class="img-preview"></div>
+					<div class="clearfix"></div>
+				</div>
+			</div>-->
+			<span class="subimt-img">提交</span>
+		</div>
+		<div class="cover-box cover-img" style="display: none;"></div>
+		<div class="cover-box cover-btn cover-btn-info" style="display: none;">
+			正在提交...
+		</div>
+	</body>
+	<script src="js/addarticle.js" type="text/javascript" charset="utf-8"></script>
+</html>
