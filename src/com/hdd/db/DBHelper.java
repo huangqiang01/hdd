@@ -78,11 +78,29 @@ public class DBHelper {
 			e.printStackTrace();
 		}
 	}
+	
+	public DBHelper(Connection conn, String sql) {
+		try {
+			// 准备执行语句
+			pst = conn.prepareStatement(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public DBHelper(String sql, int returnGeneratedKeys) {
 		try {
 			// 准备执行语句
 			pst = getConn().prepareStatement(sql, returnGeneratedKeys);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public DBHelper(Connection conn, String sql, int returnGeneratedKeys) {
+		try {
+			// 准备执行语句
+			pst = conn.prepareStatement(sql, returnGeneratedKeys);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

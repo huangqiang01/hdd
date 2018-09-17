@@ -245,11 +245,15 @@ public class GetDataDao {
 	 * @throws SQLException
 	 */
 	public OutResults getArticleDetials(String id) throws Exception{
-		String sql = "select w.id,w.itemid,w.listid,w.content from web_content as w where isshow=1 ";
+		String sql = "";
 		if (id != null && !id.equals("") && id.matches("\\d+")) {
-			sql += "and id=" + id + " ";
+			sql = "select content.id,content.content,"
+					+ "list.title,list.createtime,list.writer "
+					+ "from web_content as content "
+					+ "inner join web_list as list "
+					+ "where list.isshow=1 and content.id=list.id and list.id=" + id + ";";
 		}
-		sql += "order by id;";
+		
 		List list = new ArrayList();
 		OutResults or = new OutResults();
 		//模拟获取数据库数据
@@ -259,9 +263,10 @@ public class GetDataDao {
 		while(rs.next()){
 			articleContent = new ArticleContent();
 			articleContent.setId(rs.getString("id"));
-			articleContent.setItemid(rs.getString("itemid"));
-			articleContent.setListid(rs.getString("listid"));
 			articleContent.setContent(rs.getString("content"));
+			articleContent.setTitle(verSql.decodeString(rs.getString("title")));
+			articleContent.setCreatetime(rs.getString("createtime"));
+			articleContent.setWriter(verSql.decodeString(rs.getString("writer")));
 			list.add(articleContent);
 		}
 		or.setResults(list);

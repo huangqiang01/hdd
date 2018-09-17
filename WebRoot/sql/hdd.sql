@@ -84,11 +84,8 @@ CREATE TABLE `web_list` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `web_content` (
-  `id` int(4) NOT NULL auto_increment,
-  `itemid` char(4) default NULL,
-  `listid` char(4) default NULL,
+  `id` int(4) NOT NULL,
   `content` text,
-  `isshow` char(2) default NULL,
   `reserve` varchar(80) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

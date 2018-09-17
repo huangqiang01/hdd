@@ -37,7 +37,8 @@ function initMarkdown() {
         imageFormats: ['jpg'],
         // 生产修改
         imageUploadURL: '/hdd/20008',
-        uploadCallbackURL: ''
+        uploadCallbackURL: '',
+        placeholder: '请输入文章内容'
     });
 }
 

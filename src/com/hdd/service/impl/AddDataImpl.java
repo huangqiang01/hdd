@@ -1,8 +1,9 @@
 package com.hdd.service.impl;
 
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import com.hdd.dao.AddDataDao;
 import com.hdd.dao.GetDataDao;
@@ -69,7 +70,13 @@ public class AddDataImpl implements AddData {
 		
 		return addDataDao.addImages(typeid, minid, albumid, uri, imgwidth, imgheight, imgtitle, imgcontent, numno, isshow, reserve);
 	}
-
+	
+	@Override
+	public boolean submitImg(HashMap map, ArrayList list) throws Exception {
+		
+		return addDataDao.addImages(map, list);
+	}
+	
 	@Override
 	public boolean updateCheckZan(String checknum, String likenum, String id) throws Exception {
 		// 验证是否数字
@@ -78,7 +85,7 @@ public class AddDataImpl implements AddData {
 	}
 
 	@Override
-	public String submitArticleArr(String itemid, String title, String desc, String writer) throws Exception {
+	public boolean submitArticle(String itemid, String title, String desc, String writer, String content) throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         // 创建时间
@@ -98,19 +105,6 @@ public class AddDataImpl implements AddData {
         verSql.checkLength(desc, 600);
         desc = verSql.codeHtml(desc);
         
-		return addDataDao.addArticleArr(itemid, title, desc, createtime, writer, isshow, reserve);
-	}
-
-	@Override
-	public boolean submitArticle(String itemid, String listid, String content) throws Exception {
-		// 是否显示，1-默认显示
-        String isshow = String.valueOf('1');
-        // 备注
-        String reserve = "黄蛋蛋最帅!";
-        
-        // 验证是否数字
-        verSql.checkNum(new String[]{ itemid, listid });
-        
-		return addDataDao.addArticle(itemid, listid, content, isshow, reserve);
+		return addDataDao.addArticle(itemid, title, desc, createtime, writer, isshow, reserve, content);
 	}
 }

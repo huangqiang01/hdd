@@ -33,13 +33,11 @@ public class Servlet20012 extends QOutput {
 		String desc = request.getParameter("desc");
 		String writer = request.getParameter("writer");
 		String content = request.getParameter("content");
-		
 		try {
 			// 保存文章列表
-			String id = addData.submitArticleArr(itemid, title, desc, writer);
-			
+//			String id = addData.submitArticleArr(itemid, title, desc, writer);
 			// 保存文章详情
-			boolean submit = addData.submitArticle(itemid, id, content);
+			boolean submit = addData.submitArticle(itemid, title, desc, writer, content);
 			if (submit) {
 				this.outPut("0", "提交文章成功", response);
 			} else {

@@ -2,6 +2,8 @@ package com.hdd.service;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.hdd.utils.OutResults;
 import com.hdd.utils.QException;
@@ -41,23 +43,19 @@ public interface AddData extends Serializable {
 	public boolean submitImgDetails(String typeid, String minid, String albumid, String uri, String imgwidth, String imgheight, String imgtitle, String imgcontent, String numno) throws Exception;
 	
 	/**
+	 * 提交图片集合-详情
+	 * @param map
+	 * @param list
+	 * @return
+	 * @throws SQLException
+	 */
+	public boolean submitImg(HashMap map, ArrayList list) throws Exception;
+	
+	/**
 	 * 更新查看数量
 	 * @return
 	 */
 	public boolean updateCheckZan(String checknum, String likenum, String id) throws Exception;
-	
-	/**
-	 * 提交文章列表
-	 * @param itemid
-	 * @param title
-	 * @param desc
-	 * @param createtime
-	 * @param writer
-	 * @param reserve
-	 * @return
-	 * @throws Exception
-	 */
-	public String submitArticleArr(String itemid, String title, String desc, String writer) throws Exception;
 	
 	/**
 	 * 提交文章详情
@@ -68,6 +66,6 @@ public interface AddData extends Serializable {
 	 * @return
 	 * @throws SQLException
 	 */
-	public boolean submitArticle(String itemid, String listid, String content) throws Exception;
+	public boolean submitArticle(String itemid, String title, String desc, String writer, String content) throws Exception;
 
 }

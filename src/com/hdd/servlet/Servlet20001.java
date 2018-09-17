@@ -103,79 +103,58 @@ public class Servlet20001 extends QOutput {
             		this.outPut("-100", "上传图片数量过大", response);
             		return;
             	}
-            	//使用params.get获取参数值
-                String arrtitle = (String) params.get("arrtitle");
-                String arrcontent = (String) params.get("arrcontent");
-                String arrtips = (String) params.get("arrtips");
-                String arralbum = (String) params.get("arralbum");
-                String firstwidth = (String) params.get("firstwidth");
-                String firstheight = (String) params.get("firstheight");
-                double _firstwidth = Integer.parseInt(firstwidth) * 0.4;
-                double _firstheight = Integer.parseInt(firstheight) * 0.4;
-                String _name1 = (String) params.get("name");
-                // 保存图片集合信息
-                String _firsturl = "/upload/min/" + firsturl;
-                // 分享图片地址
-                String _shareurl = "/upload/share/" + _name1;
-                String minid = addData.submitImgArr(arrtips, arralbum, _firsturl, String.valueOf((int)_firstwidth), String.valueOf((int)_firstheight), arrtitle, arrcontent, String.valueOf(listSize), _shareurl);
-//                if (minid.equals("")) {
-//                	session.removeAttribute("imglist");
-//                	this.outPut("-2", "上传图片失败", response);
+            	// 保存图片
+            	boolean isupload = addData.submitImg(params, list);
+            	
+//            	
+//            	//使用params.get获取参数值
+//                String arrtitle = (String) params.get("arrtitle");
+//                String arrcontent = (String) params.get("arrcontent");
+//                String arrtips = (String) params.get("arrtips");
+//                String arralbum = (String) params.get("arralbum");
+//                String firstwidth = (String) params.get("firstwidth");
+//                String firstheight = (String) params.get("firstheight");
+//                double _firstwidth = Integer.parseInt(firstwidth) * 0.4;
+//                double _firstheight = Integer.parseInt(firstheight) * 0.4;
+//                String _name1 = (String) params.get("name");
+//                // 保存图片集合信息
+//                String _firsturl = "/upload/min/" + firsturl;
+//                // 分享图片地址
+//                String _shareurl = "/upload/share/" + _name1;
+//                String minid = addData.submitImgArr(arrtips, arralbum, _firsturl, String.valueOf((int)_firstwidth), String.valueOf((int)_firstheight), arrtitle, arrcontent, String.valueOf(listSize), _shareurl);
+////                if (minid.equals("")) {
+////                	session.removeAttribute("imglist");
+////                	this.outPut("-2", "上传图片失败", response);
+////                }
+//                int mark = 0;
+//                for (int i = 0; i < listSize; i++) {
+//                	HashMap map = (HashMap) list.get(i);
+//                	//使用params.get获取参数值
+//                	String name = (String) map.get("name");
+//                	String imgw_h = (String) map.get("imgw_h");
+//                	String[] w_hArr = imgw_h.split("_");
+//                	String title = (String) map.get("title");
+//                	String content = (String) map.get("content");
+//                	String numno = (String) map.get("numno");
+//                	// 保存图片
+//                	String _name = "/upload/cache/" + name;
+//                	boolean isupload = addData.submitImgDetails(arrtips, minid, arralbum, _name, w_hArr[0], w_hArr[1], title, content, numno);
+//                	if (isupload) {
+//                		mark++;
+//                	}
 //                }
-                int mark = 0;
-                for (int i = 0; i < listSize; i++) {
-                	HashMap map = (HashMap) list.get(i);
-                	//使用params.get获取参数值
-                	String name = (String) map.get("name");
-                	String imgw_h = (String) map.get("imgw_h");
-                	String[] w_hArr = imgw_h.split("_");
-                	String title = (String) map.get("title");
-                	String content = (String) map.get("content");
-                	String numno = (String) map.get("numno");
-                	// 保存图片
-                	String _name = "/upload/cache/" + name;
-                	boolean isupload = addData.submitImgDetails(arrtips, minid, arralbum, _name, w_hArr[0], w_hArr[1], title, content, numno);
-                	if (isupload) {
-                		mark++;
-                	}
-                }
-                session.removeAttribute("imglist");
-                if (mark == listSize) {
-                	this.outPut("0", "上传成功", response);
-                } else {
-                	this.outPut("-1", "上传异常，请重试", response);
-                }
+//                session.removeAttribute("imglist");
+//                if (mark == listSize) {
+//                	this.outPut("0", "上传成功", response);
+//                } else {
+//                	this.outPut("-1", "上传异常，请重试", response);
+//                }
             }
 		} catch (Exception e) {
 			session.removeAttribute("imglist");
 			this.outPut("-1", "系统异常", response);
 			e.printStackTrace();
 		}
-//        Collection<Part> parts = request.getParts();
-//        ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-//        OutResults or = new OutResults();
-//        // 遍历所有的表单内容，将表单中的文件写入上传文件目录
-//        for (Iterator<Part> iterator = parts.iterator(); iterator.hasNext();) {
-//        
-//            Part part = iterator.next();
-//            String fileName = getFilename();
-//            if (fileName != null) {
-//            	String imgUri = savePath + File.separator + fileName;
-//            	System.out.println(imgUri);
-//                part.write(imgUri);
-//                try {
-//                	// 读取照片信息
-//					HashMap<String, String> map = exiftester.getPhotoInfo(imgUri);
-//					map.put("uri", "/upload/cache" + File.separator + fileName);
-//					list.add(map);
-//				} catch (ImageProcessingException e) {
-//					this.outPut("-1", "上传图片失败", response);
-//					e.printStackTrace();
-//				}
-//            }
-//        }
-//        or.setResults(list);
-//        this.outPut(or, response);
     }
     
     // 生成文件名称
